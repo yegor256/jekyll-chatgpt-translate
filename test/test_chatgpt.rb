@@ -31,12 +31,17 @@ require_relative '../lib/jekyll-chatgpt-translate/chatgpt'
 # License:: MIT
 class GptTranslate::ChatGPTTest < Minitest::Test
   def test_short_text
-    chat = GptTranslate::ChatGPT.new(nil, 'en', 'ru')
+    chat = GptTranslate::ChatGPT.new('fake-key', 'en', 'ru')
     assert_equal('Hello, world!', chat.translate('Hello, world!'))
   end
 
+  def test_dry_mode
+    chat = GptTranslate::ChatGPT.new('', 'en', 'ru')
+    assert_equal(38, chat.translate('This text should not be sent to OpenAI').length)
+  end
+
   def test_markup
-    chat = GptTranslate::ChatGPT.new(nil, 'en', 'ru')
+    chat = GptTranslate::ChatGPT.new('fake-key', 'en', 'ru')
     assert_equal('<img src="a"/>', chat.translate('<img src="a"/>'))
   end
 end

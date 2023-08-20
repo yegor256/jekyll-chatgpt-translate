@@ -50,15 +50,15 @@ class GptTranslate::Plain
 
   # Markdown to pain text.
   class Strip < Redcarpet::Render::Base
-    [
-      :block_code, :block_quote,
-      :block_html,
-      :autolink, :codespan, :double_emphasis,
-      :emphasis, :underline, :raw_html,
-      :triple_emphasis, :strikethrough,
-      :superscript, :highlight, :quote,
-      :footnotes, :footnote_def, :footnote_ref,
-      :entity, :normal_text
+    %i[
+      block_code block_quote
+      block_html
+      autolink codespan double_emphasis
+      emphasis underline raw_html
+      triple_emphasis strikethrough
+      superscript highlight quote
+      footnotes footnote_def footnote_ref
+      entity normal_text
     ].each do |method|
       define_method method do |*args|
         args.first

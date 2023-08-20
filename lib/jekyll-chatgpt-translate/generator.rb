@@ -23,6 +23,8 @@
 # SOFTWARE.
 
 require 'jekyll'
+require_relative 'chatgpt'
+require_relative 'plain'
 
 # The module we are in.
 module GptTranslate; end
@@ -38,20 +40,61 @@ class GptTranslate::Generator < Jekyll::Generator
   # Main plugin action, called by Jekyll-core
   def generate(site)
     @site = site
-    if disabled_in_development?
-      Jekyll.logger.info('Jekyll ChatGPT Translate:', 'Skipping feed generation in development')
+    key = ENV.fetch('OPENAI_API_KEY', nil)
+    if key.nil? && Jekyll.env == 'development'
+      Jekyll.logger.info('OPENAI_API_KEY environment variable is not set and
+we are in development mode, no actual translation will happen,
+but pages will be generated')
+      key = ''
+    end
+    if key.nil?
+      Jekyll.logger.info('jekyll-chatgpt-translate requires OPENAI_API_KEY environment variable')
       return
     end
+    layout = config['layout'] || 'translated'
+    start = Time.now
+    total = 0
+    site.posts.docs.each do |doc|
+      plain = Plain.new(doc.content).to_s
+      config['targets'].each do |target|
+        lang = target['language']
+        raise 'Language must be defined for each target' if target.nil?
+        gpt = ChatGPT.new(key, config['source'] || 'en', lang)
+        translated = gpt.translate(plain)
+        path = "_chatgpt-translated/#{doc.basename}"
+        FileUtils.mkdir_p(File.dirname(path))
+        File.write(
+          path,
+          [
+            '---',
+            "layout: #{template['layout'] || layout}",
+            "title: #{doc.data['title']}",
+            "permalink: #{permalink(doc, target['permalink'])}",
+            '---',
+            '',
+            translated
+          ].join("\n")
+        )
+        site.pages << Page.new(site, site.source, File.dirname(path), File.basename(path))
+        total += 1
+      end
+    end
+    puts "#{total} pages generated in #{(Time.now - start).round(2)}s"
   end
 
   private
 
   # Returns the plugin's config or an empty hash if not set
   def config
-    @config ||= @site.config["feed"] || {}
+    @config ||= @site.config['chatgpt-translate'] || {}
   end
 
-  def disabled_in_development?
-    config && config["disable_in_development"] && Jekyll.env == 'development'
+  def permalink(doc, template)
+    raise 'permalink must be defined for each target' if template.nil?
+    template
+      .gsub(':year', doc['date'].year)
+      .gsub(':month', doc['date'].month)
+      .gsub(':day', doc['date'].day)
+      .gsub(':title', doc['title'])
   end
 end

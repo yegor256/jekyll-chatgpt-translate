@@ -42,14 +42,14 @@ class GptTranslate::PlainTest < Minitest::Test
       GptTranslate::Plain.new("* first\n\n* second\n\n* third").to_s
     )
     assert_equal(
-      "first",
+      'first',
       GptTranslate::Plain.new("* first\n\n\n\n").to_s
     )
   end
 
   def test_links
     assert_equal(
-      "Hello, dude!",
+      'Hello, dude!',
       GptTranslate::Plain.new('Hello, [dude](https://www.google.com)!').to_s
     )
   end

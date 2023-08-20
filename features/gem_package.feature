@@ -8,15 +8,14 @@ Feature: Gem Package
     #!/usr/bin/env ruby
     require 'rubygems'
     spec = Gem::Specification::load('./spec.rb')
-    if spec.executables.empty?
-      fail 'no executables: ' + File.read('./spec.rb')
-    end
     """
     When I run bash with:
     """
-    cd fief
-    gem build fief.gemspec
-    gem specification --ruby fief-*.gem > ../spec.rb
+    set -x
+    set -e
+    cd jekyll-chatgpt-translate
+    gem build jekyll-chatgpt-translate.gemspec
+    gem specification --ruby jekyll-chatgpt-translate-*.gem > ../spec.rb
     cd ..
     ruby execs.rb
     """

@@ -25,8 +25,8 @@
 source 'https://rubygems.org'
 gemspec
 
-gem 'minitest', '5.19.0', require: false
 gem 'cucumber', '8.0.0', require: false
+gem 'minitest', '5.19.0', require: false
 gem 'rake', '13.0.6', require: false
 gem 'rubocop', '1.55.1', require: false
 gem 'rubocop-rspec', '2.23.2', require: false

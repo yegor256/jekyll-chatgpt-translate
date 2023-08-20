@@ -35,10 +35,11 @@ module GptTranslate; end
 # License:: MIT
 class GptTranslate::ChatGPT
   # Ctor.
-  # +key+ OpenAI API Key (can't be nil)
+  # +key+ OpenAI API Key, which can't be nil, but can be empty string, which means dry mode (no calls to OpenAI)
   # +source+ The language to translate from
   # +target+ The language to translate into
   def initialize(key, source, target)
+    raise 'OpenAI key cannot be nil' if key.nil?
     @key = key
     @source = source
     @target = target
@@ -53,6 +54,8 @@ class GptTranslate::ChatGPT
       elsif par !~ /^[А-Я]/
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: \"#{par}\"")
         par
+      elsif @key.empty?
+        par
       else
         translate_par(par, model)
       end
@@ -62,9 +65,11 @@ class GptTranslate::ChatGPT
   private
 
   def translate_par(par, model)
+    Time.now
     t = nil
+    attempt = 0
     begin
-      response = client.chat(
+      response = OpenAI::Client.new(access_token: @key).chat(
         parameters: {
           model: model,
           messages: [{
@@ -76,30 +81,33 @@ class GptTranslate::ChatGPT
       )
       t = response.dig('choices', 0, 'message', 'content')
     rescue StandardError
-      retry
+      attempt += 1
+      retry if attempt < 4
     end
     if t.nil?
-      Jekyll.logger.error("Failed to translate #{par.split.count} Russian words :(")
+      Jekyll.logger.error("Failed to translate #{par.split.count}
+#{@source.upcase} words after #{attempt} attempts :(")
       'FAILED TO TRANSLATE THIS PARAGRAPH'
     else
-      Jekyll.logger.debug("Translated #{par.split.count} words to #{t.split.count} English words through #{model}")
+      Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words
+to #{t.split.count} #{@target.upcase} words
+through #{model} in #{(Time.now - pstart).round(2)}s")
       t
     end
   end
 
   def prompt
-    if source == 'ru' and target == 'en'
+    if (source == 'ru') && (target == 'en')
       'Пожалуйста, переведи этот параграф на английский язык'
-    elsif source == 'en' and target == 'ru'
+    elsif (source == 'en') && (target == 'ru')
       'Please, translate this paragraph to Russian'
     else
       [
         'Please, translate this paragraph from',
         ISO_639.find_by_code(@source),
         'to',
-        ISO_639.find_by_code(@target),
+        ISO_639.find_by_code(@target)
       ].join(' ')
     end
   end
 end
-

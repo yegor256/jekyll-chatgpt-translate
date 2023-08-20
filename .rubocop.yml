@@ -1,42 +1,29 @@
-inherit_from: .rubocop_todo.yml
-
-require: rubocop-jekyll
-
-inherit_gem:
-  rubocop-jekyll: .rubocop.yml
-
 AllCops:
-  TargetRubyVersion: 2.5
+  Exclude:
+    - 'bin/**/*'
+    - 'assets/**/*'
+  DisplayCopNames: true
+  TargetRubyVersion: 2.3
   SuggestExtensions: false
-  Exclude:
-    - vendor/**/*
+  NewCops: enable
 
-Layout/LineEndStringConcatenationIndentation:
-  Enabled: true
-
-Lint/EmptyInPattern:
+Gemspec/RequiredRubyVersion:
   Enabled: false
-  
+Metrics/MethodLength:
+  Enabled: false
+Style/ClassAndModuleChildren:
+  Enabled: false
+Layout/MultilineMethodCallIndentation:
+  Enabled: false
 Metrics/AbcSize:
-  IgnoredMethods:
-  - generate # in generator.rb
-
-Naming/InclusiveLanguage:
   Enabled: false
-Naming/MemoizedInstanceVariableName:
-  Exclude:
-    - lib/jekyll-feed/page-without-a-file.rb
-
-Performance/MapCompact:
-  Enabled: true
-Performance/RedundantEqualityComparisonBlock:
-  Enabled: true
-Performance/RedundantSplitRegexpArgument:
-  Enabled: true
-
-Style/InPatternThen:
+Metrics/BlockLength:
+  Max: 30
+Metrics/CyclomaticComplexity:
+  Max: 10
+Metrics/PerceivedComplexity:
+  Max: 10
+Layout/EmptyLineAfterGuardClause:
   Enabled: false
-Style/MultilineInPatternThen:
+Naming/FileName:
   Enabled: false
-Style/QuotedSymbols:
-  Enabled: true

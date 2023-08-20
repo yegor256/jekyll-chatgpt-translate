@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copyright (c) 2023 Yegor Bugayenko
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -35,12 +37,12 @@ end
 
 Given(/^I have a "([^"]*)" file with content:$/) do |file, text|
   FileUtils.mkdir_p(File.dirname(file)) unless File.exist?(file)
-  File.write(file, text.gsub(/\\xFF/, 0xFF.chr))
+  File.write(file, text.gsub('\\xFF', 0xFF.chr))
 end
 
-When(/^I build Jekyll site$/) do |arg|
+When(/^I build Jekyll site$/) do
   home = File.join(File.dirname(__FILE__), '../..')
-  @stdout = `jekyll build -I#{home}/lib`
+  @stdout = `jekyll build --source #{home}`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
@@ -61,13 +63,13 @@ Then(/^Exit code is not zero$/) do
 end
 
 When(/^I run bash with "([^"]*)"$/) do |text|
-  FileUtils.copy_entry(@cwd, File.join(@dir, 'fief'))
+  FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
   @stdout = `#{text}`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
 When(/^I run bash with:$/) do |text|
-  FileUtils.copy_entry(@cwd, File.join(@dir, 'fief'))
+  FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
   @stdout = `#{text}`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
