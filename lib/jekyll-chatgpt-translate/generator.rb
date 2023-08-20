@@ -24,7 +24,7 @@
 
 require 'jekyll'
 
-# module Jekyll; end
+# Our module.
 module Jekyll::Translate; end
 
 # Pages generator.
