@@ -51,7 +51,7 @@ class GptTranslate::ChatGPT
       if par.length <= 32
         Jekyll.logger.debug("Not translating this, b/c too short: \"#{par}\"")
         par
-      elsif par !~ /^[А-Я]/
+      elsif par !~ /^[a-zA-Zа-яА-Я]/
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: \"#{par}\"")
         par
       elsif @key.empty?
