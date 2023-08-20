@@ -34,6 +34,5 @@ Feature: Simple site building
     Then File "_site/2023/01/01/hello.html" exists
     Then File "_site/2023-01-01-Hello-chinese.html" exists
     Then File "_site/2023/Hello-french.html" exists
-    And I run bash with "tree"
     And Exit code is zero
 
