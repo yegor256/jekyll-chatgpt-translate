@@ -42,6 +42,7 @@ Gem::Specification.new do |s|
   s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
   s.rdoc_options = ['--charset=UTF-8']
   s.extra_rdoc_files = %w[README.md LICENSE.txt]
+  s.add_runtime_dependency 'iri', '~> 0.6'
   s.add_runtime_dependency 'iso-639', '~> 0.3'
   s.add_runtime_dependency 'jekyll', '~> 3.9'
   s.add_runtime_dependency 'liquid', '~> 4.0'

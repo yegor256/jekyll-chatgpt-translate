@@ -1,0 +1,60 @@
+# frozen_string_literal: true
+
+# (The MIT License)
+#
+# Copyright (c) 2023 Yegor Bugayenko
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the 'Software'), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+require 'iri'
+require 'net/http'
+require 'uri'
+require_relative 'version'
+
+# see https://stackoverflow.com/a/6048451/187141
+require 'openssl'
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+
+# The module we are in.
+module GptTranslate; end
+
+# Ping one page of a site.
+# Author:: Yegor Bugayenko (yegor256@gmail.com)
+# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# License:: MIT
+class GptTranslate::Ping
+  # Ctor.
+  def initialize(site, link)
+    @site = site
+    @link = link
+  end
+
+  def exists?
+    home = @site.config['url']
+    return false if home.nil?
+    uri = Iri.new(home).path(@link)
+    before = Net::HTTP.get_response(URI(uri.to_s))
+    if before.is_a?(Net::HTTPSuccess) && before.body.include?("/#{GptTranslate::VERSION}")
+      Jekyll.logger.info("No need to translate, page exists at #{uri} (#{before.body.split.count} words)")
+      return true
+    end
+    Jekyll.logger.debug("GET #{uri}: #{before.code}")
+    false
+  end
+end

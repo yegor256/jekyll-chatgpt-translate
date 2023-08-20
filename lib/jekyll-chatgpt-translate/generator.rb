@@ -24,6 +24,7 @@
 
 require 'jekyll'
 require_relative 'chatgpt'
+require_relative 'ping'
 require_relative 'plain'
 require_relative 'version'
 
@@ -58,6 +59,8 @@ but pages will be generated')
     site.posts.docs.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
+        link = permalink(doc, target['permalink'])
+        next if GptTranslate::Ping.new(site, link).exists?
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
         model = config['model'] || 'gpt-3.5-turbo'
@@ -76,7 +79,7 @@ but pages will be generated')
             '---',
             "layout: #{target['layout'] || layout}",
             "title: #{doc.data['title']}",
-            "permalink: #{permalink(doc, target['permalink'])}",
+            "permalink: #{link}",
             '---',
             '',
             translated,
@@ -88,7 +91,7 @@ but pages will be generated')
         total += 1
       end
     end
-    puts "#{total} pages generated in #{(Time.now - start).round(2)}s"
+    Jekyll.logger.info("#{total} pages generated in #{(Time.now - start).round(2)}s")
   end
 
   private
