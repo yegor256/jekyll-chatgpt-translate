@@ -7,32 +7,7 @@ Install it first:
 gem install jekyll-chatgpt-translate
 ```
 
-With Jekyll 2, simply add the gem to your `_config.yml` gems list:
-
-```yaml
-gems: ['jekyll-chatgpt-translate', ... your other plugins]
-```
-
-Or for previous versions,
-create a plugin file within your Jekyll project's `_plugins` directory:
-
-```ruby
-# _plugins/jekyll-chatgpt-translate.rb
-require 'jekyll-chatgpt-translate'
-```
-
-Highly recommend to use Bundler. If you're using it, add this line
-to your `Gemfile`:
-
-```
-gem 'jekyll-chatgpt-translate'
-```
-
-The plugin is compatible with 
-[Jekyll 3.9.3](https://jekyllrb.com/news/2023/01/29/jekyll-3-9-3-released/) and 
-[Jekyll 4.3.2](https://jekyllrb.com/news/2023/01/20/jekyll-4-3-2-released/). 
-
-Then, in `_config.yml` set this (all of them are mandatory and required!):
+Then, add this to `_config.yml`:
 
 ```yaml
 chatgpt-translate:
@@ -49,10 +24,15 @@ chatgpt-translate:
 ```
 
 Here, the source language is English (`en`), the target one is Chinese (`cn`),
-the layout is `_layout/translated.html`.
+the layout is `_layout/translated.html` (you must have this file).
 
 OpenAI API KEY must be set in `OPENAI_API_KEY` environment variable, otherwise
-the plugin will not do any translation and won't generate translated pages.
+the plugin will not do any translation and won't generate translated pages. 
+You can get your key [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
+
+The plugin is compatible with 
+[Jekyll 3.9.3](https://jekyllrb.com/news/2023/01/29/jekyll-3-9-3-released/) and 
+[Jekyll 4.3.2](https://jekyllrb.com/news/2023/01/20/jekyll-4-3-2-released/). 
 
 # How to Contribute
 
