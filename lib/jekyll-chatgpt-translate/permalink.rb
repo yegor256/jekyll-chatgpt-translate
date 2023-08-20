@@ -22,6 +22,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
+require 'cgi'
+
 # The module we are in.
 module GptTranslate; end
 
@@ -41,6 +43,6 @@ class GptTranslate::Permalink
       .gsub(':year', format('%04d', @doc['date'].year))
       .gsub(':month', format('%02d', @doc['date'].month))
       .gsub(':day', format('%02d', @doc['date'].day))
-      .gsub(':title', @doc['title'])
+      .gsub(':title', CGI.escape(@doc['title']))
   end
 end

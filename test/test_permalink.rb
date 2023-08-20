@@ -39,4 +39,14 @@ class GptTranslate::PermalinkTest < Minitest::Test
       ).to_s
     )
   end
+
+  def test_unicode_link
+    assert_equal(
+      '/2023-%23%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82.html',
+      GptTranslate::Permalink.new(
+        { 'date' => Time.parse('2023-01-01'), 'title' => '#привет' },
+        '/:year-:title.html'
+      ).to_s
+    )
+  end
 end
