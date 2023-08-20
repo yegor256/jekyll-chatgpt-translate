@@ -22,29 +22,21 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'English'
+require 'minitest/autorun'
+require_relative '../lib/jekyll-chatgpt-translate/chatgpt'
 
-Gem::Specification.new do |s|
-  s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.6'
-  s.name = 'jekyll-chatgpt-translate'
-  s.version = '0.0.0'
-  s.license = 'MIT'
-  s.summary = 'Translate Jekyll Pages Through ChatGPT'
-  s.description = [
-    'Add this plugin to your Jekyll site and all posts will be automatically',
-    'translated to the languages of your choice through ChatGPT'
-  ].join(' ')
-  s.authors = ['Yegor Bugayenko']
-  s.email = 'yegor256@gmail.com'
-  s.homepage = 'https://github.com/yegor256/jekyll-chatgpt-translate'
-  s.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  s.rdoc_options = ['--charset=UTF-8']
-  s.extra_rdoc_files = %w[README.md LICENSE.txt]
-  s.add_runtime_dependency 'jekyll', '>=3.9.2'
-  s.add_runtime_dependency 'redcarpet', '>=3.6.0'
-  s.add_runtime_dependency 'ruby-openai', '>=5.0.0'
-  s.add_runtime_dependency 'iso-639', '>=0.3.6'
-  s.metadata['rubygems_mfa_required'] = 'true'
+# ChatGPT test.
+# Author:: Yegor Bugayenko (yegor256@gmail.com)
+# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# License:: MIT
+class GptTranslate::ChatGPTTest < Minitest::Test
+  def test_short_text
+    chat = GptTranslate::ChatGPT.new(nil, 'en', 'ru')
+    assert_equal('Hello, world!', chat.translate('Hello, world!'))
+  end
+
+  def test_markup
+    chat = GptTranslate::ChatGPT.new(nil, 'en', 'ru')
+    assert_equal('<img src="a"/>', chat.translate('<img src="a"/>'))
+  end
 end
