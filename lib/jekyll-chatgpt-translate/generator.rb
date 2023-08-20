@@ -59,7 +59,12 @@ but pages will be generated')
       config['targets'].each do |target|
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
-        gpt = GptTranslate::ChatGPT.new(key, config['source'] || 'en', lang)
+        gpt = GptTranslate::ChatGPT.new(
+          key,
+          config['model'] || 'gpt-3.5-turbo',
+          config['source'] || 'en',
+          lang
+        )
         translated = gpt.translate(plain)
         path = "_chatgpt-translated/#{doc.basename}"
         FileUtils.mkdir_p(File.dirname(path))

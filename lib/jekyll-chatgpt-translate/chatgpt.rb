@@ -38,15 +38,15 @@ class GptTranslate::ChatGPT
   # +key+ OpenAI API Key, which can't be nil, but can be empty string, which means dry mode (no calls to OpenAI)
   # +source+ The language to translate from
   # +target+ The language to translate into
-  def initialize(key, source, target)
+  def initialize(key, model, source, target)
     raise 'OpenAI key cannot be nil' if key.nil?
     @key = key
+    @model = model
     @source = source
     @target = target
   end
 
   def translate(text)
-    model = 'gpt-3.5-turbo'
     text.split("\n\n").compact.map do |par|
       if par.length <= 32
         Jekyll.logger.debug("Not translating this, b/c too short: \"#{par}\"")
@@ -57,21 +57,21 @@ class GptTranslate::ChatGPT
       elsif @key.empty?
         par
       else
-        translate_par(par, model)
+        translate_par(par)
       end
     end.join("\n\n")
   end
 
   private
 
-  def translate_par(par, model)
+  def translate_par(par)
     Time.now
     t = nil
     attempt = 0
     begin
       response = OpenAI::Client.new(access_token: @key).chat(
         parameters: {
-          model: model,
+          model: @model,
           messages: [{
             role: 'user',
             content: "#{prompt}:\n\n#{par}"
@@ -91,7 +91,7 @@ class GptTranslate::ChatGPT
     else
       Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words
 to #{t.split.count} #{@target.upcase} words
-through #{model} in #{(Time.now - pstart).round(2)}s")
+through #{@model} in #{(Time.now - pstart).round(2)}s")
       t
     end
   end

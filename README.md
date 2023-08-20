@@ -11,6 +11,7 @@ Then, add this to `_config.yml`:
 
 ```yaml
 chatgpt-translate:
+  model: gpt-3.5-turbo
   source: en
   layout: translated
   targets: 
