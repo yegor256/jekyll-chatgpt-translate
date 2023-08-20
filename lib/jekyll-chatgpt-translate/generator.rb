@@ -24,6 +24,7 @@
 
 require 'jekyll'
 require_relative 'chatgpt'
+require_relative 'permalink'
 require_relative 'ping'
 require_relative 'plain'
 require_relative 'version'
@@ -60,7 +61,7 @@ but pages will be generated')
     site.posts.docs.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
-        link = permalink(doc, target['permalink'])
+        link = GptTranslate::Permalink.new(doc, target['permalink']).to_s
         next if GptTranslate::Ping.new(site, link).exists?
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
@@ -105,14 +106,5 @@ but pages will be generated')
   # Returns the plugin's config or an empty hash if not set
   def config
     @config ||= @site.config['chatgpt-translate'] || {}
-  end
-
-  def permalink(doc, template)
-    raise 'permalink must be defined for each target' if template.nil?
-    template
-      .gsub(':year', format('%04d', doc['date'].year))
-      .gsub(':month', format('%02d', doc['date'].month))
-      .gsub(':day', format('%02d', doc['date'].day))
-      .gsub(':title', doc['title'])
   end
 end
