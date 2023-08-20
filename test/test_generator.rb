@@ -29,7 +29,7 @@ require_relative '../lib/jekyll-chatgpt-translate/generator'
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
-class GeneratorTest < Minitest::Test
+class GptTranslate::GeneratorTest < Minitest::Test
   def test_simple_scenario
     # assert(stdout.include?('DEBUG'))
   end

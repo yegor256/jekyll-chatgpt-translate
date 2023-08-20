@@ -22,27 +22,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'English'
+require 'minitest/autorun'
+require_relative '../lib/jekyll-chatgpt-translate/plain'
 
-Gem::Specification.new do |s|
-  s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.6'
-  s.name = 'jekyll-chatgpt-translate'
-  s.version = '0.0.0'
-  s.license = 'MIT'
-  s.summary = 'Translate Jekyll Pages Through ChatGPT'
-  s.description = [
-    'Add this plugin to your Jekyll site and all posts will be automatically',
-    'translated to the languages of your choice through ChatGPT'
-  ].join(' ')
-  s.authors = ['Yegor Bugayenko']
-  s.email = 'yegor256@gmail.com'
-  s.homepage = 'https://github.com/yegor256/jekyll-chatgpt-translate'
-  s.files = `git ls-files`.split($INPUT_RECORD_SEPARATOR)
-  s.executables = s.files.grep(%r{^bin/}) { |f| File.basename(f) }
-  s.rdoc_options = ['--charset=UTF-8']
-  s.extra_rdoc_files = %w[README.md LICENSE.txt]
-  s.add_runtime_dependency 'jekyll', '>=3.9.2'
-  s.add_runtime_dependency 'redcarpet', '>=3.6.0'
-  s.metadata['rubygems_mfa_required'] = 'true'
+# Plain test.
+# Author:: Yegor Bugayenko (yegor256@gmail.com)
+# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# License:: MIT
+class GptTranslate::PlainTest < Minitest::Test
+  def test_simple_map
+    assert_equal('Hello, world!', GptTranslate::Plain.new('Hello, **world**!').to_s)
+    assert_equal('Hello, Jeff!', GptTranslate::Plain.new('Hello, _Jeff_!').to_s)
+    assert_equal("Hi\n\nBye", GptTranslate::Plain.new("  Hi\n\nBye\n\n\n").to_s)
+  end
+
+  def test_lists
+    assert_equal(
+      "first\n\nsecond\n\nthird",
+      GptTranslate::Plain.new("* first\n\n* second\n\n* third").to_s
+    )
+    assert_equal(
+      "first",
+      GptTranslate::Plain.new("* first\n\n\n\n").to_s
+    )
+  end
+
+  def test_links
+    assert_equal(
+      "Hello, dude!",
+      GptTranslate::Plain.new('Hello, [dude](https://www.google.com)!').to_s
+    )
+  end
 end

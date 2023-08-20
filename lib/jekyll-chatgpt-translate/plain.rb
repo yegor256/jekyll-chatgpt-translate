@@ -22,36 +22,63 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-require 'jekyll'
+require 'redcarpet'
 
 # The module we are in.
 module GptTranslate; end
 
-# Pages generator.
+# Markdown to plain text.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
-class GptTranslate::Generator < Jekyll::Generator
-  safe true
-  priority :lowest
+class GptTranslate::Plain
+  # Ctor.
+  def initialize(markdown)
+    @markdown = markdown
+  end
 
-  # Main plugin action, called by Jekyll-core
-  def generate(site)
-    @site = site
-    if disabled_in_development?
-      Jekyll.logger.info('Jekyll ChatGPT Translate:', 'Skipping feed generation in development')
-      return
+  def to_s
+    @markdown.split(/\n{2,}/).compact.map do |par|
+      par.gsub!("\n", ' ')
+      par.gsub!(/\s{2,}/, ' ')
+      par.strip!
+      next if par.start_with?('<')
+      next if par.start_with?('{%')
+      Redcarpet::Markdown.new(Strip).render(par)
+    end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
+  end
+
+  # Markdown to pain text.
+  class Strip < Redcarpet::Render::Base
+    [
+      :block_code, :block_quote,
+      :block_html,
+      :autolink, :codespan, :double_emphasis,
+      :emphasis, :underline, :raw_html,
+      :triple_emphasis, :strikethrough,
+      :superscript, :highlight, :quote,
+      :footnotes, :footnote_def, :footnote_ref,
+      :entity, :normal_text
+    ].each do |method|
+      define_method method do |*args|
+        args.first
+      end
     end
-  end
 
-  private
+    def list(content, _type)
+      content
+    end
 
-  # Returns the plugin's config or an empty hash if not set
-  def config
-    @config ||= @site.config["feed"] || {}
-  end
+    def list_item(content, _type)
+      content
+    end
 
-  def disabled_in_development?
-    config && config["disable_in_development"] && Jekyll.env == 'development'
+    def paragraph(text)
+      text
+    end
+
+    def link(_link, _title, content)
+      content
+    end
   end
 end
