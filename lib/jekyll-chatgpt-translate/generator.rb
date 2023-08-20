@@ -25,6 +25,7 @@
 require 'jekyll'
 require_relative 'chatgpt'
 require_relative 'plain'
+require_relative 'version'
 
 # The module we are in.
 module GptTranslate; end
@@ -77,7 +78,9 @@ but pages will be generated')
             "permalink: #{permalink(doc, target['permalink'])}",
             '---',
             '',
-            translated
+            translated,
+            '',
+            "<!-- jekyll-chatgpt-translate/#{GptTranslate::VERSION} -->"
           ].join("\n")
         )
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
