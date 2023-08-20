@@ -23,6 +23,10 @@ Feature: Simple site building
     """
     {{ content }}
     """
+    And I have a "_layouts/chinese-translated.html" file with content:
+    """
+    Chinese: {{ content }}
+    """
     And I have a "_posts/2023-01-01-hello.md" file with content:
     """
     ---
