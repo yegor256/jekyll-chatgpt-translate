@@ -53,4 +53,26 @@ class GptTranslate::PlainTest < Minitest::Test
       GptTranslate::Plain.new('Hello, [dude](https://www.google.com)!').to_s
     )
   end
+
+  def test_code
+    assert_equal(
+      'Hello, Java!',
+      GptTranslate::Plain.new('Hello, `Java`!').to_s
+    )
+  end
+
+  def test_code_block
+    assert_equal(
+      "Hello:\n\nJava",
+      GptTranslate::Plain.new("Hello:\n\n```\nJava\n```\n").to_s
+    )
+  end
+
+  def test_html
+    assert_equal(
+      'This is picture: SKIP!',
+      GptTranslate::Plain.new('This is picture: <img src="a"/>!').to_s
+    )
+    assert_equal('', GptTranslate::Plain.new('<img src="a"/>').to_s)
+  end
 end

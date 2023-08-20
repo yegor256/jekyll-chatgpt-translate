@@ -65,6 +65,10 @@ class GptTranslate::Plain
       end
     end
 
+    def raw_html(_content)
+      'SKIP'
+    end
+
     def list(content, _type)
       content
     end
