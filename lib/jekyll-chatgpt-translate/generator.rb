@@ -54,6 +54,7 @@ but pages will be generated')
       return
     end
     layout = config['layout'] || 'translated'
+    threshold = config['threshold'] || 1_000_000_000
     start = Time.now
     total = 0
     site.posts.docs.each do |doc|
@@ -64,6 +65,10 @@ but pages will be generated')
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
         model = config['model'] || 'gpt-3.5-turbo'
+        if total >= threshold
+          Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
+          break
+        end
         gpt = GptTranslate::ChatGPT.new(
           key,
           model,
@@ -90,6 +95,7 @@ but pages will be generated')
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
       end
+      break if total >= threshold
     end
     Jekyll.logger.info("#{total} pages generated in #{(Time.now - start).round(2)}s")
   end
