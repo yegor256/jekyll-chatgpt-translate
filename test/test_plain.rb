@@ -70,9 +70,9 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_html
     assert_equal(
-      'This is picture: SKIP!',
+      'This is picture: HTML!',
       GptTranslate::Plain.new('This is picture: <img src="a"/>!').to_s
     )
-    assert_equal('', GptTranslate::Plain.new('<img src="a"/>').to_s)
+    assert_equal('HTML', GptTranslate::Plain.new('<img src="a"/>').to_s)
   end
 end

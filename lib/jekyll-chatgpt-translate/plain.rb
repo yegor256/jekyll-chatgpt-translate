@@ -42,7 +42,6 @@ class GptTranslate::Plain
       par.gsub!("\n", ' ')
       par.gsub!(/\s{2,}/, ' ')
       par.strip!
-      next if par.start_with?('<')
       next if par.start_with?('{%')
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
@@ -66,7 +65,7 @@ class GptTranslate::Plain
     end
 
     def raw_html(_content)
-      'SKIP'
+      'HTML'
     end
 
     def list(content, _type)
