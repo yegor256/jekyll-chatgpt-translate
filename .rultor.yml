@@ -9,10 +9,12 @@ release:
   script: |-
     bundle exec rake
     rm -rf *.gem
-    sed -i "s/0\.0\.0/${tag}/g" jekyll-git-hash.gemspec
-    git add jekyll-git-hash.gemspec
+    sed -i "s/0\.0\.0/${tag}/g" jekyll-chatgpt-translate.gemspec
+    sed -i "s/0\.0\.0/${tag}/g" lib/jekyll-chatgpt-translate/version.rb
+    git add jekyll-chatgpt-translate.gemspec
+    git add lib/jekyll-chatgpt-translate/version.rb
     git commit -m "version set to ${tag}"
-    gem build jekyll-git-hash.gemspec
+    gem build jekyll-chatgpt-translate.gemspec
     chmod 0600 ../rubygems.yml
     gem push *.gem --config-file ../rubygems.yml
 merge:
