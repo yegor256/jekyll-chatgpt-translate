@@ -9,6 +9,7 @@ Feature: Gem Package
     require 'rubygems'
     spec = Gem::Specification::load('./spec.rb')
     """
+    And I copy this gem into temp dir
     When I run bash with:
     """
     set -x

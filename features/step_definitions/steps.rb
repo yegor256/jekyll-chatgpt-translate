@@ -41,13 +41,16 @@ Given(/^I have a "([^"]*)" file with content:$/) do |file, text|
 end
 
 When(/^I build Jekyll site$/) do
-  home = File.join(File.dirname(__FILE__), '../..')
-  @stdout = `jekyll build --source #{home}`
+  @stdout = `jekyll build`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
 Then(/^Stdout contains "([^"]*)"$/) do |txt|
   raise "STDOUT doesn't contain '#{txt}':\n#{@stdout}" unless @stdout.include?(txt)
+end
+
+Then(/^File "([^"]*)" exists$/) do |name|
+  raise unless File.exist?(name)
 end
 
 Then(/^Stdout is empty$/) do
@@ -63,15 +66,17 @@ Then(/^Exit code is not zero$/) do
 end
 
 When(/^I run bash with "([^"]*)"$/) do |text|
-  FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
   @stdout = `#{text}`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
 When(/^I run bash with:$/) do |text|
-  FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
   @stdout = `#{text}`
   @exitstatus = $CHILD_STATUS.exitstatus
+end
+
+When(/^I copy this gem into temp dir$/) do
+  FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
 end
 
 Given(/^It is Unix$/) do

@@ -4,6 +4,7 @@ Feature: Simple site building
   Scenario: Simple site
     Given I have a "_config.yml" file with content:
     """
+    markdown: kramdown
     chatgpt-translate:
       source: en
       layout: translated
@@ -16,7 +17,7 @@ Feature: Simple site building
           language: fr
           permalink: :year-:month-:day-:title-french.html
     """
-    And I have a "_layout/default.yml" file with content:
+    And I have a "_layouts/default.html" file with content:
     """
     {{ content }}
     """
@@ -27,7 +28,13 @@ Feature: Simple site building
     ---
     Hello, world!
     """
-    When I build Jekyll site
-    Then Stdout contains "done"
+    Then I build Jekyll site
+    Then File "_site/2023/01/01/hello.html" exists
+    And I run bash with:
+    """
+    pwd
+    ls -al
+    tree
+    """
     And Exit code is zero
 

@@ -26,6 +26,8 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'cucumber', '8.0.0', require: false
+gem 'jekyll', '3.9.2', require: false
+gem 'kramdown-parser-gfm', '1.1.0', require: false
 gem 'minitest', '5.19.0', require: false
 gem 'rake', '13.0.6', require: false
 gem 'rubocop', '1.55.1', require: false
