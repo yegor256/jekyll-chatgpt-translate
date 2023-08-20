@@ -75,4 +75,11 @@ class GptTranslate::PlainTest < Minitest::Test
     )
     assert_equal('HTML', GptTranslate::Plain.new('<img src="a"/>').to_s)
   end
+
+  def test_liquid_tags
+    assert_equal(
+      'Hello, !',
+      GptTranslate::Plain.new('Hello, {{ Java }}!').to_s
+    )
+  end
 end

@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'redcarpet'
+require 'liquid'
 
 # The module we are in.
 module GptTranslate; end
@@ -42,9 +43,21 @@ class GptTranslate::Plain
       par.gsub!("\n", ' ')
       par.gsub!(/\s{2,}/, ' ')
       par.strip!
-      next if par.start_with?('{%')
+      liquid = Liquid::Template.parse(par)
+      par = liquid.render({}, drop: NullDrop.new, registers: { removed: true })
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
+  end
+
+  # To ignore/remove Liquid tags.
+  class NullDrop < Liquid::Drop
+    def method_missing(*)
+      nil
+    end
+
+    def respond_to_missing?(*)
+      true
+    end
   end
 
   # Markdown to pain text.
