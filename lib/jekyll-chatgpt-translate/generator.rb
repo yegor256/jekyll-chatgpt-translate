@@ -60,9 +60,10 @@ but pages will be generated')
       config['targets'].each do |target|
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
+        model = config['model'] || 'gpt-3.5-turbo'
         gpt = GptTranslate::ChatGPT.new(
           key,
-          config['model'] || 'gpt-3.5-turbo',
+          model,
           config['source'] || 'en',
           lang
         )
@@ -80,7 +81,7 @@ but pages will be generated')
             '',
             translated,
             '',
-            "<!-- jekyll-chatgpt-translate/#{GptTranslate::VERSION} -->"
+            "Translated by ChatGPT #{model}/#{GptTranslate::VERSION}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
