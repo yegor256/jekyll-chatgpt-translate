@@ -55,11 +55,11 @@ but pages will be generated')
     start = Time.now
     total = 0
     site.posts.docs.each do |doc|
-      plain = Plain.new(doc.content).to_s
+      plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
-        gpt = ChatGPT.new(key, config['source'] || 'en', lang)
+        gpt = GptTranslate::ChatGPT.new(key, config['source'] || 'en', lang)
         translated = gpt.translate(plain)
         path = "_chatgpt-translated/#{doc.basename}"
         FileUtils.mkdir_p(File.dirname(path))
@@ -67,7 +67,7 @@ but pages will be generated')
           path,
           [
             '---',
-            "layout: #{template['layout'] || layout}",
+            "layout: #{target['layout'] || layout}",
             "title: #{doc.data['title']}",
             "permalink: #{permalink(doc, target['permalink'])}",
             '---',
@@ -75,7 +75,7 @@ but pages will be generated')
             translated
           ].join("\n")
         )
-        site.pages << Page.new(site, site.source, File.dirname(path), File.basename(path))
+        site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
       end
     end
@@ -92,9 +92,9 @@ but pages will be generated')
   def permalink(doc, template)
     raise 'permalink must be defined for each target' if template.nil?
     template
-      .gsub(':year', doc['date'].year)
-      .gsub(':month', doc['date'].month)
-      .gsub(':day', doc['date'].day)
+      .gsub(':year', format('%04d', doc['date'].year))
+      .gsub(':month', format('%02d', doc['date'].month))
+      .gsub(':day', format('%02d', doc['date'].day))
       .gsub(':title', doc['title'])
   end
 end
