@@ -66,7 +66,7 @@ class GptTranslate::Plain
       block_code block_quote
       block_html
       autolink codespan double_emphasis
-      emphasis underline raw_html
+      emphasis underline
       triple_emphasis strikethrough
       superscript highlight quote
       footnotes footnote_def footnote_ref
