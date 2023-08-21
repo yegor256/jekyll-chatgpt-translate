@@ -13,11 +13,11 @@ Feature: Simple site building
       targets:
         -
           language: cn
-          permalink: :year-:month-:day-:title-chinese.html
+          permalink: :year-:month-:day-:slug-chinese.html
           layout: chinese-translated
         -
           language: fr
-          permalink: :year/:title-french.html
+          permalink: :year/:slug-french.html
     """
     And I have a "_layouts/default.html" file with content:
     """
@@ -30,11 +30,13 @@ Feature: Simple site building
     And I have a "_posts/2023-01-01-hello.md" file with content:
     """
     ---
+    title: Hello, world!
     layout: default
     ---
     Hello, world!
     """
     Then I build Jekyll site
+    Then File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" exists
     Then File "_site/2023/01/01/hello.html" exists
     Then File "_site/2023-01-01-Hello-chinese.html" exists
     Then File "_site/2023/Hello-french.html" exists

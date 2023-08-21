@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'minitest/autorun'
+require 'webmock/minitest'
 require 'jekyll'
 require_relative '../lib/jekyll-chatgpt-translate/ping'
 
@@ -40,14 +41,16 @@ class GptTranslate::PingTest < Minitest::Test
   end
 
   def test_when_exists
+    stub_request(:any, 'https://www.yegor256.com/about-me.html')
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/about-me.html')
     assert(!ping.exists?)
   end
 
   def test_when_not_exists
+    stub_request(:any, 'https://www.yegor256.com/absent.html').to_return(status: 404)
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
-    ping = GptTranslate::Ping.new(site, '/this-page-doesnt-exist.html')
+    ping = GptTranslate::Ping.new(site, '/absent.html')
     assert(!ping.exists?)
   end
 

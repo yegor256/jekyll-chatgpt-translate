@@ -44,6 +44,7 @@ class GptTranslate::Permalink
       .gsub(':month', format('%02d', @doc['date'].month))
       .gsub(':day', format('%02d', @doc['date'].day))
       .gsub(':title', CGI.escape(@doc['title']))
+      .gsub(':slug', CGI.escape(@doc['slug']))
     path = "/#{path}" unless path.start_with?('/')
     path
   end
