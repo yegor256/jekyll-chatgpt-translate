@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'minitest/autorun'
+require 'webmock/minitest'
 require_relative '../lib/jekyll-chatgpt-translate/chatgpt'
 
 # ChatGPT test.
@@ -43,5 +44,12 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   def test_markup
     chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
     assert_equal('<img src="a"/>', chat.translate('<img src="a"/>'))
+  end
+
+  def test_through_webmock
+    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
+      .to_return(body: '{"choices":[{"message":{"content": "boom!"}}]}')
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
+    assert_equal('boom!', chat.translate('This is the text to send to OpenAI'))
   end
 end

@@ -65,7 +65,7 @@ class GptTranslate::ChatGPT
   private
 
   def translate_par(par)
-    Time.now
+    start = Time.now
     t = nil
     attempt = 0
     begin
@@ -87,14 +87,14 @@ class GptTranslate::ChatGPT
     end
     Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words \
 to #{t.split.count} #{@target.upcase} words \
-through #{@model} in #{(Time.now - pstart).round(2)}s")
+through #{@model} in #{(Time.now - start).round(2)}s")
     t
   end
 
   def prompt
-    if (source == 'ru') && (target == 'en')
+    if (@source == 'ru') && (@target == 'en')
       'Пожалуйста, переведи этот параграф на английский язык'
-    elsif (source == 'en') && (target == 'ru')
+    elsif (@source == 'en') && (@target == 'ru')
       'Please, translate this paragraph to Russian'
     else
       [
