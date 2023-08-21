@@ -4,7 +4,10 @@
 [![Gem Version](https://badge.fury.io/rb/jekyll-chatgpt-translate.svg)](http://badge.fury.io/rb/jekyll-chatgpt-translate)
 
 If you have a [Jekyll](https://jekyllrb.com/) static site, this plugin may help you automatically
-translate its pages to another language, through [ChatGPT](https://chat.openai.com/).
+translate its pages to another language, through [ChatGPT](https://chat.openai.com/). See how it 
+works for [my blog](https://github.com/yegor256/ru.yegor256.com), 
+for example [this page](https://ru.yegor256.com/2023-08-13-dictators.html) is translated to 
+[English]().
 
 Install it first:
 

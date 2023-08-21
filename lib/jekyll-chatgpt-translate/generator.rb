@@ -114,6 +114,7 @@ class GptTranslate::Generator < Jekyll::Generator
       File.read(file).strip
     else
       Jekyll.logger.info("The file is not found: #{file}")
+      nil
     end
     if key.nil? && Jekyll.env == 'development'
       Jekyll.logger.info("OPENAI_API_KEY environment variable is not set, \
