@@ -92,6 +92,7 @@ class GptTranslate::Generator < Jekyll::Generator
         doc.data["translated-#{lang}-url"] = link
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
+        Jekyll.logger.info("Translated via ChatGPT: #{doc.basename}")
       end
       break if total >= threshold
     end
