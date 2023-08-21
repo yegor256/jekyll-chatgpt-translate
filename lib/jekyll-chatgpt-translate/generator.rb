@@ -43,6 +43,7 @@ class GptTranslate::Generator < Jekyll::Generator
   # Main plugin action, called by Jekyll-core
   def generate(site)
     @site = site
+    home = '_chatgpt-translated'
     key = ENV.fetch('OPENAI_API_KEY', nil)
     if key.nil? && Jekyll.env == 'development'
       Jekyll.logger.info("OPENAI_API_KEY environment variable is not set and \
@@ -77,7 +78,7 @@ but pages will be generated")
           lang
         )
         translated = gpt.translate(plain)
-        path = "_chatgpt-translated/#{lang}/#{doc.basename.gsub(/\.md$/, "-#{lang}.md")}"
+        path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
         FileUtils.mkdir_p(File.dirname(path))
         File.write(
           path,
