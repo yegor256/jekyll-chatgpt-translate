@@ -45,9 +45,9 @@ class GptTranslate::Generator < Jekyll::Generator
     @site = site
     key = ENV.fetch('OPENAI_API_KEY', nil)
     if key.nil? && Jekyll.env == 'development'
-      Jekyll.logger.info('OPENAI_API_KEY environment variable is not set and \
+      Jekyll.logger.info("OPENAI_API_KEY environment variable is not set and \
 we are in development mode, no actual translation will happen, \
-but pages will be generated')
+but pages will be generated")
       key = ''
     end
     if key.nil?
