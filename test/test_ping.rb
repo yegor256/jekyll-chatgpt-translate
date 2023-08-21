@@ -44,4 +44,10 @@ class GptTranslate::PingTest < Minitest::Test
     ping = GptTranslate::Ping.new(site, '/about-me.html')
     assert(!ping.exists?)
   end
+
+  def test_when_not_exists
+    site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
+    ping = GptTranslate::Ping.new(site, '/this-page-doesnt-exist.html')
+    assert(!ping.exists?)
+  end
 end
