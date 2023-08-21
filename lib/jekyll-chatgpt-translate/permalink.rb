@@ -38,11 +38,13 @@ class GptTranslate::Permalink
     @template = template
   end
 
-  def to_s
-    @template
+  def to_path
+    path = @template
       .gsub(':year', format('%04d', @doc['date'].year))
       .gsub(':month', format('%02d', @doc['date'].month))
       .gsub(':day', format('%02d', @doc['date'].day))
       .gsub(':title', CGI.escape(@doc['title']))
+    path = "/#{path}" unless path.start_with?('/')
+    path
   end
 end

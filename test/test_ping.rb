@@ -50,4 +50,10 @@ class GptTranslate::PingTest < Minitest::Test
     ping = GptTranslate::Ping.new(site, '/this-page-doesnt-exist.html')
     assert(!ping.exists?)
   end
+
+  def test_relative_path
+    assert_raises do
+      GptTranslate::Ping.new({}, '404.html')
+    end
+  end
 end

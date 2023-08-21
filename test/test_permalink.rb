@@ -35,8 +35,8 @@ class GptTranslate::PermalinkTest < Minitest::Test
       '/2023.html',
       GptTranslate::Permalink.new(
         { 'date' => Time.parse('2023-01-01'), 'title' => 'Hello' },
-        '/:year.html'
-      ).to_s
+        ':year.html'
+      ).to_path
     )
   end
 
@@ -45,8 +45,8 @@ class GptTranslate::PermalinkTest < Minitest::Test
       '/2023-%23%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82.html',
       GptTranslate::Permalink.new(
         { 'date' => Time.parse('2023-01-01'), 'title' => '#привет' },
-        '/:year-:title.html'
-      ).to_s
+        ':year-:title.html'
+      ).to_path
     )
   end
 end

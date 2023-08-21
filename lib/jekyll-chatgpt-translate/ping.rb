@@ -40,15 +40,16 @@ module GptTranslate; end
 # License:: MIT
 class GptTranslate::Ping
   # Ctor.
-  def initialize(site, link)
+  def initialize(site, path)
     @site = site
-    @link = link
+    raise 'Permalink must start with a slash' unless path.start_with?('/')
+    @path = path
   end
 
   def exists?
     home = @site.config['url']
     return false if home.nil?
-    uri = Iri.new(home).path(@link)
+    uri = Iri.new(home).path(@path)
     before = Net::HTTP.get_response(URI(uri.to_s))
     if before.is_a?(Net::HTTPSuccess) && before.body.include?("/#{GptTranslate::VERSION}")
       Jekyll.logger.info("No need to translate, page exists at #{uri} (#{before.body.split.count} words)")
