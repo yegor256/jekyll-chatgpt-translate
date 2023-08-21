@@ -22,7 +22,7 @@ chatgpt-translate:
   targets: 
     - 
       language: cn
-      permalink: :year-:month-:day-:title-chinese.html
+      permalink: :year-:month-:day-:slug-chinese.html
       layout: chinese-translated
     - 
       language: fr
