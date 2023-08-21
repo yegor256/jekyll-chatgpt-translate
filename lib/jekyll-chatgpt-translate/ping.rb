@@ -51,9 +51,14 @@ class GptTranslate::Ping
     return false if home.nil?
     uri = Iri.new(home).path(@path)
     before = Net::HTTP.get_response(URI(uri.to_s))
-    if before.is_a?(Net::HTTPSuccess) && before.body.include?("/#{GptTranslate::VERSION}")
-      Jekyll.logger.info("No need to translate, page exists at #{uri} (#{before.body.split.count} words)")
-      return true
+    if before.is_a?(Net::HTTPSuccess)
+      if before.body.include?("/#{GptTranslate::VERSION}")
+        Jekyll.logger.info("No need to translate, the page exists at #{uri} (#{before.body.split.count} words)")
+        return true
+      end
+      Jekyll.logger.info("Re-translation required for #{uri}")
+    else
+      Jekyll.logger.info("The page is absent, will translate: #{uri}")
     end
     Jekyll.logger.debug("GET #{uri}: #{before.code}")
     false
