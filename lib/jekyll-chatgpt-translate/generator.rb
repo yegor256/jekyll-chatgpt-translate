@@ -42,15 +42,9 @@ class GptTranslate::Generator < Jekyll::Generator
 
   # Main plugin action, called by Jekyll-core
   def generate(site)
-    @site = site
+    config ||= site.config['chatgpt-translate'] || {}
     home = '_chatgpt-translated'
-    key = ENV.fetch('OPENAI_API_KEY', nil)
-    if key.nil? && Jekyll.env == 'development'
-      Jekyll.logger.info("OPENAI_API_KEY environment variable is not set and \
-we are in development mode, no actual translation will happen, \
-but pages will be generated")
-      key = ''
-    end
+    key = api_key(config)
     if key.nil?
       Jekyll.logger.info('jekyll-chatgpt-translate requires OPENAI_API_KEY environment variable')
       return
@@ -106,8 +100,22 @@ but pages will be generated")
 
   private
 
-  # Returns the plugin's config or an empty hash if not set
-  def config
-    @config ||= @site.config['chatgpt-translate'] || {}
+  # Try to find the KEY, either in the environment, a file, etc.
+  # If not found, return NIL.
+  def api_key(config)
+    file = config['api_key_file']
+    key = if file.nil?
+      ENV.fetch('OPENAI_API_KEY', nil)
+    else
+      File.read(file).strip
+    end
+    if key.nil? && Jekyll.env == 'development'
+      Jekyll.logger.info("OPENAI_API_KEY environment variable is not set, \
+the `api_key_file` option is not specified in the _config.yml, and \
+we are in development mode, that's why no actual translation will happen, \
+but .md pages will be generated")
+      key = ''
+    end
+    key
   end
 end
