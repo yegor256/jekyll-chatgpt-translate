@@ -80,20 +80,15 @@ class GptTranslate::ChatGPT
         }
       )
       t = response.dig('choices', 0, 'message', 'content')
-    rescue StandardError
+    rescue StandardError => e
       attempt += 1
       retry if attempt < 4
+      raise e
     end
-    if t.nil?
-      Jekyll.logger.error("Failed to translate #{par.split.count} \
-#{@source.upcase} words after #{attempt} attempts :(")
-      'FAILED TO TRANSLATE THIS PARAGRAPH'
-    else
-      Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words \
+    Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words \
 to #{t.split.count} #{@target.upcase} words \
 through #{@model} in #{(Time.now - pstart).round(2)}s")
-      t
-    end
+    t
   end
 
   def prompt
