@@ -8,6 +8,7 @@ Feature: Simple site building
     plugins:
       - jekyll-chatgpt-translate
     chatgpt-translate:
+      api_key_file: the-file-is-absent.txt
       source: en
       layout: translated
       targets:

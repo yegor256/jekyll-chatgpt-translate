@@ -107,7 +107,7 @@ class GptTranslate::Generator < Jekyll::Generator
     file = config['api_key_file']
     key = if file.nil?
       ENV.fetch('OPENAI_API_KEY', nil)
-    else
+    elsif File.exist?(file)
       File.read(file).strip
     end
     if key.nil? && Jekyll.env == 'development'
