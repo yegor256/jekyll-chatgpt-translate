@@ -25,6 +25,7 @@
 require 'minitest/autorun'
 require 'webmock/minitest'
 require 'jekyll'
+require 'tempfile'
 require_relative '../lib/jekyll-chatgpt-translate/ping'
 
 # Ping test.
@@ -44,14 +45,18 @@ class GptTranslate::PingTest < Minitest::Test
     stub_request(:any, 'https://www.yegor256.com/about-me.html')
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/about-me.html')
-    assert(!ping.exists?)
+    Tempfile.open do |f|
+      assert(!ping.found?(f))
+    end
   end
 
   def test_when_not_exists
     stub_request(:any, 'https://www.yegor256.com/absent.html').to_return(status: 404)
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/absent.html')
-    assert(!ping.exists?)
+    Tempfile.open do |f|
+      assert(!ping.found?(f))
+    end
   end
 
   def test_relative_path

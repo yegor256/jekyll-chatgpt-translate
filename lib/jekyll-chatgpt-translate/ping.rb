@@ -46,14 +46,17 @@ class GptTranslate::Ping
     @path = path
   end
 
-  def exists?
+  def found?(file)
     home = @site.config['url']
     return false if home.nil?
     uri = Iri.new(home).path(@path)
     before = Net::HTTP.get_response(URI(uri.to_s))
     if before.is_a?(Net::HTTPSuccess)
-      if before.body.include?("/#{GptTranslate::VERSION}")
-        Jekyll.logger.info("No need to translate, the page exists at #{uri} (#{before.body.split.count} words)")
+      html = before.body
+      if html.include?("/#{GptTranslate::VERSION}")
+        Jekyll.logger.info("No need to translate, the page exists at \
+#{uri} (#{html.split.count} words), saved to #{file}")
+        File.write(file, html)
         return true
       end
       Jekyll.logger.info("Re-translation required for #{uri}")

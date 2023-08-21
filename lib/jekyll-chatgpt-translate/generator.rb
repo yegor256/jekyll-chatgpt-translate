@@ -57,7 +57,7 @@ class GptTranslate::Generator < Jekyll::Generator
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
-        next if GptTranslate::Ping.new(site, link).exists?
+        next if GptTranslate::Ping.new(site, link).found?(doc.path)
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
         model = config['model'] || 'gpt-3.5-turbo'
