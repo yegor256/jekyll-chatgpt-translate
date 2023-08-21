@@ -85,7 +85,7 @@ class GptTranslate::ChatGPT
       retry if attempt < 4
       raise e
     end
-    Jekyll.logger.debug("Translated #{par.split.count} #{@source.upcase} words \
+    Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
 to #{t.split.count} #{@target.upcase} words \
 through #{@model} in #{(Time.now - start).round(2)}s")
     t
