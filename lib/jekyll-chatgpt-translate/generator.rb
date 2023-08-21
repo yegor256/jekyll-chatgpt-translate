@@ -77,7 +77,7 @@ but pages will be generated')
           lang
         )
         translated = gpt.translate(plain)
-        path = "_chatgpt-translated/#{doc.basename}"
+        path = "_chatgpt-translated/#{lang}/#{doc.basename.gsub(/\\.md$/, "-#{lang}.md")}"
         FileUtils.mkdir_p(File.dirname(path))
         File.write(
           path,
