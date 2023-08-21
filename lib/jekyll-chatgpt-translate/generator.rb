@@ -110,10 +110,11 @@ class GptTranslate::Generator < Jekyll::Generator
       Jekyll.logger.info('The key is found in the OPENAI_API_KEY env variable') unless k.nil?
       k
     elsif File.exist?(file)
-      Jekyll.logger.info("Reading OpenAI key from the file: #{file}")
-      File.read(file).strip
+      k = File.read(file).strip
+      Jekyll.logger.info("The OpenAI API key taken from the file: \"#{file}\" (#{k.length} chars)")
+      k
     else
-      Jekyll.logger.info("The file is not found: #{file}")
+      Jekyll.logger.info("The file with the OpenAI API key is not found: \"#{file}\"")
       nil
     end
     if key.nil? && Jekyll.env == 'development'
