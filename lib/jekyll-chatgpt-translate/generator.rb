@@ -87,6 +87,7 @@ but pages will be generated")
             "layout: #{target['layout'] || layout}",
             "title: #{doc.data['title']}",
             "permalink: #{link}",
+            "translated-original-url: #{doc.url}",
             '---',
             '',
             translated,
@@ -94,6 +95,7 @@ but pages will be generated")
             "Translated by ChatGPT #{model}/#{GptTranslate::VERSION}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
+        doc.data["translated-#{lang}-url"] = link
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
       end

@@ -36,6 +36,11 @@ OpenAI API KEY must be set in `OPENAI_API_KEY` environment variable, otherwise
 the plugin will not do any translation and won't generate translated pages. 
 You can get your key [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
 
+Inside the original page you can use `{{ page.translated-XX-url }}` in order to render the URL
+of the translated page, where `XX` is the ISO-839-1 code of the target language..
+Inside the translated page you can use `{{ page.translated-original-url }}` in order
+to get the URL of the page that was translated.
+
 ## Options
 
 Full list of options available to specify in `_config.yml`:
