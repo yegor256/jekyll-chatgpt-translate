@@ -34,6 +34,7 @@ class GptTranslate::PlainTest < Minitest::Test
     assert_equal('Hello, world!', GptTranslate::Plain.new('Hello, **world**!').to_s)
     assert_equal('Hello, Jeff!', GptTranslate::Plain.new('Hello, _Jeff_!').to_s)
     assert_equal("Hi\n\nBye", GptTranslate::Plain.new("  Hi\n\nBye\n\n\n").to_s)
+    assert_equal('Hi, dude!', GptTranslate::Plain.new("  Hi,\ndude!\n").to_s)
   end
 
   def test_lists
