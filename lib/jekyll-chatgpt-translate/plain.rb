@@ -74,6 +74,8 @@ class GptTranslate::Plain
     def codespan(content)
       if content.start_with?("\n")
         "```#{content}```"
+      elsif content.end_with?("\n")
+        "```\n#{content.split("\n", 2)[1]}```"
       else
         content
       end

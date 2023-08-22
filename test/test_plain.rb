@@ -96,6 +96,10 @@ class GptTranslate::PlainTest < Minitest::Test
       "```\nHello\n```",
       GptTranslate::Plain.new("```\nHello\n```").to_s
     )
+    assert_equal(
+      "```\nprint('hi!')\n```",
+      GptTranslate::Plain.new("```java\nprint('hi!')\n```").to_s
+    )
   end
 
   def test_liquid_tags
