@@ -56,7 +56,7 @@ class GptTranslate::Generator < Jekyll::Generator
     total = 0
     model = config['model'] || 'gpt-3.5-turbo'
     marker = "Translated by ChatGPT #{model}/#{version}"
-    site.posts.docs.each do |doc|
+    site.posts.docs.shuffle.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
