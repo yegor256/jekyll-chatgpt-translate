@@ -92,17 +92,12 @@ through #{@model} in #{(Time.now - start).round(2)}s")
   end
 
   def prompt
-    if (@source == 'ru') && (@target == 'en')
-      'Пожалуйста, переведи этот параграф на английский язык'
-    elsif (@source == 'en') && (@target == 'ru')
-      'Please, translate this paragraph to Russian'
-    else
-      [
-        'Please, translate this paragraph from',
-        ISO_639.find_by_code(@source),
-        'to',
-        ISO_639.find_by_code(@target)
-      ].join(' ')
-    end
+    [
+      'Please, translate this paragraph from',
+      ISO_639.find_by_code(@source),
+      'to',
+      ISO_639.find_by_code(@target),
+      ', don\'t change proper nouns'
+    ].join(' ')
   end
 end
