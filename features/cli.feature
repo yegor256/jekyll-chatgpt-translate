@@ -41,6 +41,7 @@ Feature: Simple site building
     """
     Then I build Jekyll site
     Then File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" exists
+    Then File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" contains "/2023-01-01-hello-chinese.html"
     Then File "_site/2023/01/01/hello.html" exists
     Then File "_site/2023/01/01/hello.html" contains "The Chinese: /2023-01-01-hello-chinese.html"
     Then File "_site/2023-01-01-hello-chinese.html" exists
