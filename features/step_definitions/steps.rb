@@ -53,10 +53,10 @@ Then(/^File "([^"]*)" exists$/) do |name|
   raise "The file \"#{name}\" is absent:\n#{`tree -s`}" unless File.exist?(name)
 end
 
-Then('File {name} contains {text}') do |name, text|
-  raise "The file \"#{name}\" is absent" unless File.exist?(name)
-  content = File.read(name)
-  raise "The file \"#{name}\" doesn't contain \"#{text}\":\n#{content}" unless content.include?(text)
+Then('File {string} contains {string}') do |string, string2|
+  raise "The file \"#{string}\" is absent" unless File.exist?(string)
+  content = File.read(string)
+  raise "The file \"#{string}\" doesn't contain \"#{string2}\":\n#{content}" unless content.include?(string2)
 end
 
 Then(/^Stdout is empty$/) do
