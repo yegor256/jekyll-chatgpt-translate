@@ -46,7 +46,7 @@ class GptTranslate::Plain
       # Liquid tags are removed, but this implementation is primitive
       # Seehttps://stackoverflow.com/questions/
       par.gsub!(/{{[^}]+}}/, '')
-      par.gsub!(/{%[^%]+%}/, '')
+      par.gsub!(/{%.+?%}/, '')
       par.strip!
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
