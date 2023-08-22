@@ -31,7 +31,11 @@ require_relative '../lib/jekyll-chatgpt-translate/prompt'
 # License:: MIT
 class GptTranslate::PromptTest < Minitest::Test
   def par(body, source, target)
-    "Please, translate the following paragraph from #{source} to #{target}, don't change proper nouns:\n\n#{body}"
+    [
+      'Please, translate the following Markdown paragraph',
+      " from #{source} to #{target},",
+      " don't change proper nouns:\n\n#{body}"
+    ].join
   end
 
   def test_english_to_russian
