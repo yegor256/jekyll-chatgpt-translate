@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'jekyll'
+require 'json'
 require_relative 'chatgpt'
 require_relative 'permalink'
 require_relative 'ping'
@@ -81,11 +82,11 @@ class GptTranslate::Generator < Jekyll::Generator
           [
             '---',
             "layout: #{target['layout'] || layout}",
-            "title: #{doc.data['title']}",
-            "description: #{doc.data['description']}",
-            "permalink: #{link}",
-            "translated-original-url: #{doc.url}",
-            "chatgpt-model: #{model}",
+            "title: #{doc.data['title'].to_json}",
+            "description: #{doc.data['description'].to_json}",
+            "permalink: #{link.to_json}",
+            "translated-original-url: #{doc.url.to_json}",
+            "chatgpt-model: #{model.to_json}",
             '---',
             '',
             translated,
