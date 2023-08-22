@@ -57,7 +57,7 @@ class GptTranslate::Ping
         html = before.body
         if html.include?(marker)
           Jekyll.logger.info("No need to translate, the page exists at \
-  #{uri} (#{html.split.count} words), saved to #{file}")
+\"#{uri}\" (#{html.split.count} words), saved to \"#{file}\"")
           FileUtils.mkdir_p(File.dirname(file))
           File.write(file, html)
           return true
