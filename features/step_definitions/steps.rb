@@ -40,7 +40,7 @@ Given(/^I have a "([^"]*)" file with content:$/) do |file, text|
   File.write(file, text.gsub('\\xFF', 0xFF.chr))
 end
 
-When(/^I build Jekyll site$/) do
+When('I build Jekyll site') do
   @stdout = `jekyll build`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
@@ -77,7 +77,7 @@ When(/^I run bash with:$/) do |text|
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
-When(/^I copy this gem into temp dir$/) do
+When('I copy this gem into temp dir') do
   FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
 end
 
