@@ -68,41 +68,42 @@ class GptTranslate::Generator < Jekyll::Generator
         FileUtils.mkdir_p(File.dirname(path))
         File.write(path, '') # in order to surpress warnings in Page ctor
         dest = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).destination(site.dest)
-        doc.data["translated-#{lang}-url"] = link
-        doc.data['chatgpt-model'] = model
         if GptTranslate::Ping.new(site, link).found?(dest, version)
           copied += 1
+        elsif translated >= threshold
           next
+        else
+          gpt = GptTranslate::ChatGPT.new(
+            key,
+            model,
+            config['source'] || 'en',
+            lang
+          )
+          foreign = gpt.translate(plain)
+          File.write(
+            path,
+            [
+              '---',
+              "layout: #{target['layout'] || layout}",
+              "title: #{doc['title'].to_json}",
+              "description: #{doc['description'].to_json}",
+              "permalink: #{link.to_json}",
+              "translated-original-url: #{doc.url.to_json}",
+              "translated-language: #{lang.to_json}",
+              "chatgpt-model: #{model.to_json}",
+              '---',
+              '',
+              foreign,
+              '',
+              "#{marker} on #{Time.now.strftime('%d/%m/%Y %H:%M')}\n{: .jekyll-chatgpt-translate}"
+            ].join("\n")
+          )
+          site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
+          translated += 1
+          Jekyll.logger.info("Translated via ChatGPT: #{path} (#{File.size(path)} bytes)")
         end
-        next if translated >= threshold
-        gpt = GptTranslate::ChatGPT.new(
-          key,
-          model,
-          config['source'] || 'en',
-          lang
-        )
-        foreign = gpt.translate(plain)
-        File.write(
-          path,
-          [
-            '---',
-            "layout: #{target['layout'] || layout}",
-            "title: #{doc['title'].to_json}",
-            "description: #{doc['description'].to_json}",
-            "permalink: #{link.to_json}",
-            "translated-original-url: #{doc.url.to_json}",
-            "translated-language: #{lang.to_json}",
-            "chatgpt-model: #{model.to_json}",
-            '---',
-            '',
-            foreign,
-            '',
-            "#{marker} on #{Time.now.strftime('%d/%m/%Y %H:%M')}\n{: .jekyll-chatgpt-translate}"
-          ].join("\n")
-        )
-        site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
-        translated += 1
-        Jekyll.logger.info("Translated via ChatGPT: #{path} (#{File.size(path)} bytes)")
+        doc.data["translated-#{lang}-url"] = link
+        doc.data['chatgpt-model'] = model
       end
     end
     Jekyll.logger.info("#{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")

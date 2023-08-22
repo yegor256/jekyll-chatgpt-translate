@@ -75,28 +75,23 @@ class GptTranslate::GeneratorTest < Minitest::Test
   end
 
   class FakeDocument
+    attr_reader :data
+
     def initialize(path)
       @path = path
+      @data = { 'date' => Time.now, 'title' => 'Hello!' }
     end
 
     def content
       'Hello, world!'
     end
 
-    def data
-      {}
+    def []=(key, value)
+      @data[key] = value
     end
 
-    def []=(key, value); end
-
     def [](key)
-      if key == 'date'
-        Time.now
-      elsif key == 'title'
-        'Hello!'
-      else
-        ''
-      end
+      @data[key] || ''
     end
 
     def relative_path
