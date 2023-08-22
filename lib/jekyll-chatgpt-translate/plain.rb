@@ -43,18 +43,10 @@ class GptTranslate::Plain
       par.gsub!("\n", ' ')
       par.gsub!(/\s{2,}/, ' ')
       par.strip!
-      Liquid::Template.register_filter(NoOpFilter)
       liquid = Liquid::Template.parse(par)
       par = liquid.render({}, drop: NullDrop.new, registers: { removed: true })
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
-  end
-
-  # To ignore Liquid tags.
-  module NoOpFilter
-    def noop(input)
-      input
-    end
   end
 
   # To ignore/remove Liquid tags.

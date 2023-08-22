@@ -50,6 +50,7 @@ class GptTranslate::Generator < Jekyll::Generator
       return
     end
     layout = config['layout'] || 'translated'
+    version = config['version'] || GptTranslate::VERSION
     threshold = config['threshold'] || 1_000_000_000
     start = Time.now
     total = 0
@@ -87,7 +88,7 @@ class GptTranslate::Generator < Jekyll::Generator
             '',
             translated,
             '',
-            "Translated by ChatGPT #{model}/#{GptTranslate::VERSION}\n{: .jekyll-chatgpt-translate}"
+            "Translated by ChatGPT #{model}/#{version}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
         doc.data["translated-#{lang}-url"] = link

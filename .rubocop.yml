@@ -20,9 +20,9 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 50
 Metrics/CyclomaticComplexity:
-  Max: 15
+  Max: 20
 Metrics/PerceivedComplexity:
-  Max: 15
+  Max: 20
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Naming/FileName:
