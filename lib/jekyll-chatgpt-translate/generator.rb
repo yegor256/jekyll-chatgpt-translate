@@ -63,10 +63,6 @@ class GptTranslate::Generator < Jekyll::Generator
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
-        if total >= threshold
-          Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
-          break
-        end
         path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
         FileUtils.mkdir_p(File.dirname(path))
         File.write(path, '') # in order to surpress warnings in Page ctor
@@ -101,9 +97,12 @@ class GptTranslate::Generator < Jekyll::Generator
         )
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
-        Jekyll.logger.info("Translated via ChatGPT: #{path}")
+        Jekyll.logger.info("Translated via ChatGPT: #{path} (#{File.size(path)} bytes)")
       end
-      break if total >= threshold
+      if total >= threshold
+        Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
+        break
+      end
     end
     Jekyll.logger.info("#{total} pages translated in #{(Time.now - start).round(2)}s")
   end

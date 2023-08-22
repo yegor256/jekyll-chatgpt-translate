@@ -33,19 +33,16 @@ require_relative '../lib/jekyll-chatgpt-translate/generator'
 # License:: MIT
 class GptTranslate::GeneratorTest < Minitest::Test
   class FakeSite
-    attr_reader :config
+    attr_reader :config, :pages
 
     def initialize(config, docs)
       @config = config
       @docs = docs
+      @pages = []
     end
 
     def posts
       FakePosts.new(@docs)
-    end
-
-    def pages
-      []
     end
 
     def permalink_style
@@ -65,7 +62,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
     end
 
     def dest
-      ''
+      File.dirname(@docs[0])
     end
 
     def in_theme_dir(base, _foo = nil, _bar = nil)
@@ -149,6 +146,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
       gen = GptTranslate::Generator.new
       stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
       gen.generate(site)
+      assert_equal(1, site.pages.count)
     end
   end
 
@@ -158,18 +156,15 @@ class GptTranslate::GeneratorTest < Minitest::Test
       File.write(post, "---\ntitle: Hello\n---\n\nHello, world!")
       site = FakeSite.new(
         {
-          'url' => 'https://www.yegor256.com/',
           'chatgpt-translate' => {
             'threshold' => 1,
             'targets' => [
               {
                 'language' => 'zh',
-                'layout' => 'chinese',
                 'permalink' => ':slug.html'
               },
               {
                 'language' => 'fr',
-                'layout' => 'french',
                 'permalink' => ':year/:slug.html'
               }
             ]
@@ -180,6 +175,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
       gen = GptTranslate::Generator.new
       stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
       gen.generate(site)
+      assert_equal(2, site.pages.count)
     end
   end
 end
