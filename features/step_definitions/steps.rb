@@ -85,10 +85,10 @@ When(/^I copy this gem into temp dir$/) do
   FileUtils.copy_entry(@cwd, File.join(@dir, 'jekyll-chatgpt-translate'))
 end
 
-Given(/^It is Unix$/) do
+Given('It is Unix') do
   pending if Gem.win_platform?
 end
 
-Given(/^It is Windows$/) do
+Given('It is Windows') do
   pending unless Gem.win_platform?
 end
