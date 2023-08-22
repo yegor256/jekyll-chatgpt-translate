@@ -82,6 +82,7 @@ class GptTranslate::Generator < Jekyll::Generator
             "title: #{doc.data['title']}",
             "permalink: #{link}",
             "translated-original-url: #{doc.url}",
+            "chatgpt-model: #{model}",
             '---',
             '',
             translated,
@@ -90,6 +91,7 @@ class GptTranslate::Generator < Jekyll::Generator
           ].join("\n")
         )
         doc.data["translated-#{lang}-url"] = link
+        doc.data['chatgpt-model'] = model
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
         Jekyll.logger.info("Translated via ChatGPT: #{path}")

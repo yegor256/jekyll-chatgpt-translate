@@ -42,7 +42,8 @@ You can get your key [here](https://help.openai.com/en/articles/4936850-where-do
 Inside the original page you can use `{{ page.translated-XX-url }}` in order to render the URL
 of the translated page, where `XX` is the ISO-839-1 code of the target language..
 Inside the translated page you can use `{{ page.translated-original-url }}` in order
-to get the URL of the page that was translated.
+to get the URL of the page that was translated. You can also use `{{ page.chatgpt-model }}`
+inside both the original page and the translated one, to refer to the model of ChatGPT.
 
 ## Options
 

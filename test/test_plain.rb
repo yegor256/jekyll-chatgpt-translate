@@ -81,5 +81,9 @@ class GptTranslate::PlainTest < Minitest::Test
       'Hello, !',
       GptTranslate::Plain.new('Hello, {{ Java }}!').to_s
     )
+    # assert_equal(
+    #   'Hello, !',
+    #   GptTranslate::Plain.new('Hello, {% Java %}!').to_s
+    # )
   end
 end
