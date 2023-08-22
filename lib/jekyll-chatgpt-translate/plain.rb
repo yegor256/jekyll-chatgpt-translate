@@ -40,36 +40,26 @@ class GptTranslate::Plain
   def to_s
     # To turn compact lists into proper lists
     @markdown.gsub(/([^\n])\n(\s*\*)/, "\\1\n\n\\2").split(/\n{2,}/).compact.map do |par|
-      par.gsub!("\t", ' ')
-      par.gsub!(/\n+/, ' ')
-      par.gsub!(/ {2,}/, ' ')
+      par.strip!
       # Liquid tags are removed, but this implementation is primitive
       # Seehttps://stackoverflow.com/questions/
       par.gsub!(/{{[^}]+}}/, '')
       par.gsub!(/{%.+?%}/, '')
       par.gsub!(/<!--.+?-->/m, '')
-      par.strip!
-      Redcarpet::Markdown.new(Strip).render(par)
+      par = Redcarpet::Markdown.new(Strip).render(par)
+      par.gsub!("\t", '  ')
+      par.gsub!(/\n+/, ' ') unless par.start_with?('```')
+      par.gsub!(/ {2,}/, ' ') unless par.start_with?('```')
+      par.strip
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
   end
-
-  # # To ignore/remove Liquid tags.
-  # class NullDrop < Liquid::Drop
-  #   def method_missing(*)
-  #     nil
-  #   end
-
-  #   def respond_to_missing?(*)
-  #     true
-  #   end
-  # end
 
   # Markdown to pain text.
   class Strip < Redcarpet::Render::Base
     %i[
       block_code block_quote
       block_html
-      autolink codespan double_emphasis
+      autolink double_emphasis
       emphasis underline
       triple_emphasis strikethrough
       superscript highlight quote
@@ -81,8 +71,16 @@ class GptTranslate::Plain
       end
     end
 
-    def raw_html(_content)
-      'HTML'
+    def codespan(content)
+      if content.start_with?("\n")
+        "```#{content}```"
+      else
+        content
+      end
+    end
+
+    def raw_html(content)
+      content
     end
 
     def list(content, _type)

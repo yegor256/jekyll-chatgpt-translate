@@ -78,17 +78,24 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_code_block
     assert_equal(
-      "Hello:\n\nJava",
+      "Hello:\n\n```\nJava\n```",
       GptTranslate::Plain.new("Hello:\n\n```\nJava\n```\n").to_s
     )
   end
 
   def test_html
     assert_equal(
-      'This is picture: HTML!',
+      'This is picture: <img src="a"/>!',
       GptTranslate::Plain.new('This is picture: <img src="a"/>!').to_s
     )
-    assert_equal('HTML', GptTranslate::Plain.new('<img src="a"/>').to_s)
+    assert_equal('<img src="a"/>', GptTranslate::Plain.new('<img src="a"/>').to_s)
+  end
+
+  def test_big_code
+    assert_equal(
+      "```\nHello\n```",
+      GptTranslate::Plain.new("```\nHello\n```").to_s
+    )
   end
 
   def test_liquid_tags
@@ -97,7 +104,7 @@ class GptTranslate::PlainTest < Minitest::Test
       GptTranslate::Plain.new('Hello, {{ Java }}!').to_s
     )
     assert_equal(
-      'Hello,  dude !',
+      'Hello, dude !',
       GptTranslate::Plain.new('Hello, {% if a %} dude {% endif %}!').to_s
     )
     assert_equal(
