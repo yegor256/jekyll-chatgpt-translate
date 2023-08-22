@@ -51,7 +51,7 @@ class GptTranslate::Generator < Jekyll::Generator
     end
     layout = config['layout'] || 'translated'
     version = config['version'] || GptTranslate::VERSION
-    threshold = config['threshold'] || 1_000_000_000
+    threshold = config['threshold'] || 1024
     start = Time.now
     total = 0
     model = config['model'] || 'gpt-3.5-turbo'
