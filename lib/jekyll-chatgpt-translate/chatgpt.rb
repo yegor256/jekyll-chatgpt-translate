@@ -47,9 +47,9 @@ class GptTranslate::ChatGPT
     @target = target
   end
 
-  def translate(text)
+  def translate(text, min: 32)
     text.split("\n\n").compact.map do |par|
-      if par.length <= 32
+      if par.length <= min
         Jekyll.logger.debug("Not translating this, b/c too short: \"#{par}\"")
         par
       elsif par !~ /^[[[:alpha:]]'"]/

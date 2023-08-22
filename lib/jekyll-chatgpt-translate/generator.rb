@@ -53,6 +53,7 @@ class GptTranslate::Generator < Jekyll::Generator
     layout = config['layout'] || 'translated'
     version = config['version'] || GptTranslate::VERSION
     threshold = config['threshold'] || 1024
+    min_chars = config['min_chars'] || 128
     start = Time.now
     translated = 0
     copied = 0
@@ -79,7 +80,7 @@ class GptTranslate::Generator < Jekyll::Generator
             config['source'] || 'en',
             lang
           )
-          foreign = gpt.translate(plain)
+          foreign = gpt.translate(plain, min: min_chars)
           File.write(
             path,
             [
