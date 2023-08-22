@@ -30,10 +30,21 @@ require_relative '../lib/jekyll-chatgpt-translate/prompt'
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::PromptTest < Minitest::Test
-  def test_simple
+  def par(body, source, target)
+    "Please, translate the following paragraph from #{source} to #{target}, don't change proper nouns:\n\n#{body}"
+  end
+
+  def test_english_to_russian
     assert_equal(
-      "Please, translate the following paragraph from English to Russian, don't change proper nouns:\n\nHello, dude!",
+      par('Hello, dude!', 'English', 'Russian'),
       GptTranslate::Prompt.new('Hello, dude!', 'en', 'ru').to_s
+    )
+  end
+
+  def test_english_to_chinese
+    assert_equal(
+      par('Hello, Jeff!', 'English', 'Chinese'),
+      GptTranslate::Prompt.new('Hello, Jeff!', 'en', 'zh').to_s
     )
   end
 end
