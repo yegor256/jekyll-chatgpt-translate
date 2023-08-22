@@ -106,8 +106,8 @@ class GptTranslate::Plain
       text
     end
 
-    def link(_link, _title, content)
-      content
+    def link(link, _title, content)
+      "[#{content}](#{link})"
     end
   end
 end

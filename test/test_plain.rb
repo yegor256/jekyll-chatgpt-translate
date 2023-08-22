@@ -32,7 +32,7 @@ require_relative '../lib/jekyll-chatgpt-translate/plain'
 class GptTranslate::PlainTest < Minitest::Test
   def test_simple_map
     assert_equal('Hello, world!', GptTranslate::Plain.new("Hello,\n**world**!").to_s)
-    assert_equal('Hello, world!', GptTranslate::Plain.new("Hello,\n[world](/x.html)!").to_s)
+    assert_equal('Hello, [world](/x.html)!', GptTranslate::Plain.new("Hello,\n[world](/x.html)!").to_s)
     assert_equal('Hello, Jeff!', GptTranslate::Plain.new('Hello, _Jeff_!').to_s)
     # assert_equal('Hello, Walter!', GptTranslate::Plain.new('Hello, ~Walter~!').to_s)
     assert_equal("Hi\n\nBye", GptTranslate::Plain.new("  Hi\n\nBye\n\n\n").to_s)
@@ -66,8 +66,8 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_links
     assert_equal(
-      'Hello, dude!',
-      GptTranslate::Plain.new('Hello, [dude](https://www.google.com)!').to_s
+      'Hello, [dude](/a.html)!',
+      GptTranslate::Plain.new('Hello, [dude](/a.html)!').to_s
     )
   end
 
