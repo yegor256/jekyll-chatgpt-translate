@@ -25,6 +25,7 @@
 require 'jekyll'
 require 'openai'
 require 'iso-639'
+require_relative 'prompt'
 
 # The module we are in.
 module GptTranslate; end
@@ -66,37 +67,27 @@ class GptTranslate::ChatGPT
 
   def translate_par(par)
     start = Time.now
-    output = nil
+    answer = nil
     attempt = 0
     begin
-      input = "#{prompt}:\n\n#{par}"
+      prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
       response = OpenAI::Client.new(access_token: @key).chat(
         parameters: {
           model: @model,
-          messages: [{ role: 'user', content: input }],
+          messages: [{ role: 'user', content: prompt }],
           temperature: 0.7
         }
       )
-      output = response.dig('choices', 0, 'message', 'content')
-      Jekyll.logger.debug("ChatGPT input: \"#{input}\", ChatGPT response: \"#{output}\"")
+      answer = response.dig('choices', 0, 'message', 'content')
+      Jekyll.logger.debug("ChatGPT prompt: \"#{prompt}\", ChatGPT answer: \"#{answer}\"")
     rescue StandardError => e
       attempt += 1
       retry if attempt < 4
       raise e
     end
     Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
-to #{output.split.count} #{@target.upcase} words \
+to #{answer.split.count} #{@target.upcase} words \
 through #{@model} in #{(Time.now - start).round(2)}s")
-    output
-  end
-
-  def prompt
-    [
-      'Please, translate this paragraph from',
-      ISO_639.find_by_code(@source),
-      'to',
-      ISO_639.find_by_code(@target),
-      ', don\'t change proper nouns'
-    ].join(' ')
+    answer
   end
 end
