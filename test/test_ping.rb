@@ -59,6 +59,15 @@ class GptTranslate::PingTest < Minitest::Test
     end
   end
 
+  def test_wrong_address
+    WebMock.allow_net_connect!
+    site = FakeSite.new({ 'url' => 'https://localhost:1/' })
+    ping = GptTranslate::Ping.new(site, '/boom.html')
+    Tempfile.open do |f|
+      assert(!ping.found?(f, ''))
+    end
+  end
+
   def test_relative_path
     assert_raises do
       GptTranslate::Ping.new({}, '404.html')
