@@ -71,6 +71,8 @@ class GptTranslate::Generator < Jekyll::Generator
         FileUtils.mkdir_p(File.dirname(path))
         File.write(path, '') # in order to surpress warnings in Page ctor
         dest = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).destination(site.dest)
+        doc.data["translated-#{lang}-url"] = link
+        doc.data['chatgpt-model'] = model
         next if GptTranslate::Ping.new(site, link).found?(dest, version)
         gpt = GptTranslate::ChatGPT.new(
           key,
@@ -96,8 +98,6 @@ class GptTranslate::Generator < Jekyll::Generator
             "#{marker}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
-        doc.data["translated-#{lang}-url"] = link
-        doc.data['chatgpt-model'] = model
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
         total += 1
         Jekyll.logger.info("Translated via ChatGPT: #{path}")
