@@ -48,10 +48,6 @@ class GptTranslate::GeneratorTest < Minitest::Test
       []
     end
 
-    def file_read_opts
-      {}
-    end
-
     def permalink_style
       ''
     end
