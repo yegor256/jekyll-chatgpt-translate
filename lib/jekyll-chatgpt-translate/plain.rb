@@ -47,6 +47,7 @@ class GptTranslate::Plain
       # Seehttps://stackoverflow.com/questions/
       par.gsub!(/{{[^}]+}}/, '')
       par.gsub!(/{%.+?%}/, '')
+      par.gsub!(/<!--.+?-->/m, '')
       par.strip!
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
