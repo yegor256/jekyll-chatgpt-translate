@@ -59,20 +59,16 @@ Then('File {string} contains {string}') do |string, string2|
   raise "The file \"#{string}\" doesn't contain \"#{string2}\":\n#{content}" unless content.include?(string2)
 end
 
-Then(/^Stdout is empty$/) do
-  raise "STDOUT is not empty:\n#{@stdout}" unless @stdout == ''
-end
-
-Then(/^Exit code is zero$/) do
+Then('Exit code is zero') do
   raise "Non-zero exit #{@exitstatus}:\n#{@stdout}" unless @exitstatus.zero?
 end
 
-Then(/^Exit code is not zero$/) do
+Then('Exit code is not zero') do
   raise 'Zero exit code' if @exitstatus.zero?
 end
 
-When(/^I run bash with "([^"]*)"$/) do |text|
-  @stdout = `#{text}`
+When('I run bash with {string}') do |string|
+  @stdout = `#{string}`
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
