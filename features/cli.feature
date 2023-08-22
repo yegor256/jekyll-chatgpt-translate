@@ -13,7 +13,7 @@ Feature: Simple site building
       layout: translated
       targets:
         -
-          language: cn
+          language: zh
           permalink: :year-:month-:day-:slug-chinese.html
           layout: chinese-translated
         -
@@ -22,7 +22,7 @@ Feature: Simple site building
     """
     And I have a "_layouts/default.html" file with content:
     """
-    The Chinese: {{ page.translated-cn-url }}
+    The Chinese: {{ page.translated-zh-url }}
     The French: {{ page.translated-fr-url }}
     {{ content }}
     """
@@ -40,8 +40,9 @@ Feature: Simple site building
     Hello, world!
     """
     Then I build Jekyll site
-    And File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" exists
-    And File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" contains "/2023-01-01-hello-chinese.html"
+    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" exists
+    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "/2023-01-01-hello-chinese.html"
+    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "translated-language: \"zh\""
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/2023/01/01/hello.html" contains "The Chinese: /2023-01-01-hello-chinese.html"
     And File "_site/2023-01-01-hello-chinese.html" exists
