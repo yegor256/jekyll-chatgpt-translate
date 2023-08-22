@@ -55,6 +55,7 @@ class GptTranslate::Plain
   end
 
   # Markdown to pain text.
+  # Motivated by https://github.com/vmg/redcarpet/blob/master/lib/redcarpet/render_strip.rb
   class Strip < Redcarpet::Render::Base
     %i[
       block_code block_quote
@@ -83,6 +84,10 @@ class GptTranslate::Plain
       else
         content
       end
+    end
+
+    def image(link, title, alt)
+      "![#{alt}](#{link} \"#{title}\")"
     end
 
     def raw_html(content)

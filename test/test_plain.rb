@@ -89,6 +89,10 @@ class GptTranslate::PlainTest < Minitest::Test
     assert_equal('### Hello', GptTranslate::Plain.new('### Hello').to_s)
   end
 
+  def test_image
+    assert_equal('![alt](a.png "hello")', GptTranslate::Plain.new('![alt](a.png "hello")').to_s)
+  end
+
   def test_html
     assert_equal(
       'This is picture: <img src="a"/>!',
