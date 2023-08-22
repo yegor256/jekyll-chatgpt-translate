@@ -78,7 +78,7 @@ class GptTranslate::ChatGPT
         }
       )
       output = response.dig('choices', 0, 'message', 'content')
-      Jekyll.logger.info("ChatGPT prompt: \"#{input}\", ChatGPT response #{output}")
+      Jekyll.logger.debug("ChatGPT input: \"#{input}\", ChatGPT response: \"#{output}\"")
     rescue StandardError => e
       attempt += 1
       retry if attempt < 4
