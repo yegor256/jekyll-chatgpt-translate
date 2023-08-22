@@ -23,6 +23,8 @@
 # SOFTWARE.
 
 require 'minitest/autorun'
+require 'tmpdir'
+require 'webmock/minitest'
 require_relative '../lib/jekyll-chatgpt-translate/generator'
 
 # Generator test.
@@ -30,7 +32,103 @@ require_relative '../lib/jekyll-chatgpt-translate/generator'
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::GeneratorTest < Minitest::Test
+  class FakeSite
+    attr_reader :config
+
+    def initialize(config, doc)
+      @config = config
+      @doc = doc
+    end
+
+    def posts
+      FakePosts.new(@doc)
+    end
+
+    def pages
+      []
+    end
+
+    def source
+      ''
+    end
+
+    def in_theme_dir(base, _foo = nil, _bar = nil)
+      base
+    end
+  end
+
+  class FakeDocument
+    def initialize(path)
+      @path = path
+    end
+
+    def content
+      'Hello, world!'
+    end
+
+    def data
+      {}
+    end
+
+    def []=(key, value); end
+
+    def [](key)
+      if key == 'date'
+        Time.now
+      elsif key == 'title'
+        'Hello!'
+      else
+        ''
+      end
+    end
+
+    def relative_path
+      @path
+    end
+
+    def url
+      '2023-01-01-hello.html'
+    end
+
+    def basename
+      '2023-01-01-hello'
+    end
+  end
+
+  class FakePosts
+    attr_reader :config
+
+    def initialize(doc)
+      @doc = doc
+    end
+
+    def docs
+      [FakeDocument.new(@doc)]
+    end
+  end
+
   def test_simple_scenario
-    # assert(stdout.include?('DEBUG'))
+    Dir.mktmpdir do |home|
+      post = File.join(home, '2023-01-01-hello.md')
+      File.write(post, "---\ntitle: Hello\n---\n\nHello, world!")
+      site = FakeSite.new(
+        {
+          'url' => 'https://www.yegor256.com/',
+          'chatgpt-translate' => {
+            'targets' => [
+              {
+                'language' => 'cn',
+                'layout' => 'chinese',
+                'permalink' => ':slug.html'
+              }
+            ]
+          }
+        },
+        FakeDocument.new({})
+      )
+      gen = GptTranslate::Generator.new
+      stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
+      gen.generate(site)
+    end
   end
 end
