@@ -72,6 +72,14 @@ class GptTranslate::Plain
       end
     end
 
+    def double_emphasis(txt)
+      "**#{txt}**"
+    end
+
+    def emphasis(txt)
+      "*#{txt}*"
+    end
+
     def header(text, level)
       "#{'#' * level} #{text}"
     end
