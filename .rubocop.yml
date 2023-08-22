@@ -33,3 +33,5 @@ Layout/ElseAlignment:
   Enabled: false
 Layout/EndAlignment:
   Enabled: false
+Metrics/ClassLength:
+  Max: 200
