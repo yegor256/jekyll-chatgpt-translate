@@ -82,6 +82,7 @@ class GptTranslate::Generator < Jekyll::Generator
             '---',
             "layout: #{target['layout'] || layout}",
             "title: #{doc.data['title']}",
+            "description: #{doc.data['description']}",
             "permalink: #{link}",
             "translated-original-url: #{doc.url}",
             "chatgpt-model: #{model}",
