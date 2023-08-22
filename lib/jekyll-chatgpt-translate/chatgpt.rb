@@ -66,29 +66,28 @@ class GptTranslate::ChatGPT
 
   def translate_par(par)
     start = Time.now
-    t = nil
+    output = nil
     attempt = 0
     begin
+      input = "#{prompt}:\n\n#{par}"
       response = OpenAI::Client.new(access_token: @key).chat(
         parameters: {
           model: @model,
-          messages: [{
-            role: 'user',
-            content: "#{prompt}:\n\n#{par}"
-          }],
+          messages: [{ role: 'user', content: input }],
           temperature: 0.7
         }
       )
-      t = response.dig('choices', 0, 'message', 'content')
+      output = response.dig('choices', 0, 'message', 'content')
+      Jekyll.logger.info("ChatGPT prompt: \"#{input}\", ChatGPT response #{output}")
     rescue StandardError => e
       attempt += 1
       retry if attempt < 4
       raise e
     end
     Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
-to #{t.split.count} #{@target.upcase} words \
+to #{output.split.count} #{@target.upcase} words \
 through #{@model} in #{(Time.now - start).round(2)}s")
-    t
+    output
   end
 
   def prompt
