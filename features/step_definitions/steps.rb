@@ -50,10 +50,11 @@ Then(/^Stdout contains "([^"]*)"$/) do |txt|
 end
 
 Then(/^File "([^"]*)" exists$/) do |name|
-  raise "The file \"#{name}\" is absent:\n#{`tree`}" unless File.exist?(name)
+  raise "The file \"#{name}\" is absent:\n#{`tree -s`}" unless File.exist?(name)
 end
 
 Then(/^File "([^"]*)" contains "([^"]*)"$/) do |name, text|
+  raise "The file \"#{name}\" is absent" unless File.exist?(name)
   content = File.read(name)
   raise "The file \"#{name}\" doesn't contain \"#{text}\":\n#{content}" unless content.include?(text)
 end

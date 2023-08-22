@@ -48,12 +48,32 @@ class GptTranslate::GeneratorTest < Minitest::Test
       []
     end
 
+    def permalink_style
+      ''
+    end
+
+    def frontmatter_defaults
+      Jekyll::FrontmatterDefaults.new(self)
+    end
+
+    def converters
+      [Jekyll::Converters::Markdown.new({ 'markdown_ext' => 'md' })]
+    end
+
     def source
+      ''
+    end
+
+    def dest
       ''
     end
 
     def in_theme_dir(base, _foo = nil, _bar = nil)
       base
+    end
+
+    def in_dest_dir(*paths)
+      paths[0].dup
     end
   end
 
@@ -91,7 +111,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
     end
 
     def basename
-      '2023-01-01-hello'
+      '2023-01-01-hello.md'
     end
   end
 

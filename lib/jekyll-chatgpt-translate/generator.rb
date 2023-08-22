@@ -61,13 +61,15 @@ class GptTranslate::Generator < Jekyll::Generator
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
-        next if GptTranslate::Ping.new(site, link).found?(doc.relative_path, version)
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
         if total >= threshold
           Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
           break
         end
+        path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
+        page = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
+        next if GptTranslate::Ping.new(site, link).found?(page.destination(site.dest), version)
         gpt = GptTranslate::ChatGPT.new(
           key,
           model,
@@ -75,7 +77,6 @@ class GptTranslate::Generator < Jekyll::Generator
           lang
         )
         translated = gpt.translate(plain)
-        path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
         FileUtils.mkdir_p(File.dirname(path))
         File.write(
           path,
@@ -96,7 +97,7 @@ class GptTranslate::Generator < Jekyll::Generator
         )
         doc.data["translated-#{lang}-url"] = link
         doc.data['chatgpt-model'] = model
-        site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
+        site.pages << page
         total += 1
         Jekyll.logger.info("Translated via ChatGPT: #{path}")
       end

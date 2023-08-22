@@ -40,12 +40,12 @@ Feature: Simple site building
     Hello, world!
     """
     Then I build Jekyll site
-    Then File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" exists
-    Then File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" contains "/2023-01-01-hello-chinese.html"
-    Then File "_site/2023/01/01/hello.html" exists
-    Then File "_site/2023/01/01/hello.html" contains "The Chinese: /2023-01-01-hello-chinese.html"
-    Then File "_site/2023-01-01-hello-chinese.html" exists
-    Then File "_site/2023-01-01-hello-chinese.html" contains "The original: /2023/01/01/hello.html"
-    Then File "_site/2023/hello-french.html" exists
+    And File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" exists
+    And File "_chatgpt-translated/cn/2023-01-01-hello-cn.md" contains "/2023-01-01-hello-chinese.html"
+    And File "_site/2023/01/01/hello.html" exists
+    And File "_site/2023/01/01/hello.html" contains "The Chinese: /2023-01-01-hello-chinese.html"
+    And File "_site/2023-01-01-hello-chinese.html" exists
+    And File "_site/2023-01-01-hello-chinese.html" contains "The original: /2023/01/01/hello.html"
+    And File "_site/2023/hello-french.html" exists
     And Exit code is zero
 
