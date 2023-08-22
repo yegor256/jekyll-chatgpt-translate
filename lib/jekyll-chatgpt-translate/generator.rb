@@ -95,7 +95,7 @@ class GptTranslate::Generator < Jekyll::Generator
             '',
             translated,
             '',
-            "#{marker}\n{: .jekyll-chatgpt-translate}"
+            "#{marker} on #{Time.now.strftime('%d/%m/%Y %H:%M')}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
