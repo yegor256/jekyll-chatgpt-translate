@@ -47,6 +47,20 @@ class GptTranslate::PlainTest < Minitest::Test
     )
   end
 
+  def test_ordered_list
+    assert_equal(
+      "first\n\nsecond\n\nthird",
+      GptTranslate::Plain.new("1. first\n\n2. second\n\n3. third").to_s
+    )
+  end
+
+  def test_compact_list
+    assert_equal(
+      "first\n\nsecond\n\nthird",
+      GptTranslate::Plain.new("* first\n* second\n* third").to_s
+    )
+  end
+
   def test_links
     assert_equal(
       'Hello, dude!',

@@ -38,9 +38,11 @@ class GptTranslate::Plain
   end
 
   def to_s
-    @markdown.split(/\n{2,}/).compact.map do |par|
-      par.gsub!("\n", ' ')
-      par.gsub!(/\s{2,}/, ' ')
+    # To turn compact lists into proper lists
+    @markdown.gsub(/([^\n])\n(\s*\*)/, "\\1\n\n\\2").split(/\n{2,}/).compact.map do |par|
+      # par.gsub!("\n", ' ')
+      par.gsub!("\t", ' ')
+      par.gsub!(/ {2,}/, ' ')
       # Liquid tags are removed, but this implementation is primitive
       # Seehttps://stackoverflow.com/questions/
       par.gsub!(/{{[^}]+}}/, '')
@@ -50,16 +52,16 @@ class GptTranslate::Plain
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
   end
 
-  # To ignore/remove Liquid tags.
-  class NullDrop < Liquid::Drop
-    def method_missing(*)
-      nil
-    end
+  # # To ignore/remove Liquid tags.
+  # class NullDrop < Liquid::Drop
+  #   def method_missing(*)
+  #     nil
+  #   end
 
-    def respond_to_missing?(*)
-      true
-    end
-  end
+  #   def respond_to_missing?(*)
+  #     true
+  #   end
+  # end
 
   # Markdown to pain text.
   class Strip < Redcarpet::Render::Base
