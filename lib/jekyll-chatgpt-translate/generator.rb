@@ -54,7 +54,8 @@ class GptTranslate::Generator < Jekyll::Generator
     version = config['version'] || GptTranslate::VERSION
     threshold = config['threshold'] || 1024
     start = Time.now
-    total = 0
+    translated = 0
+    copied = 0
     model = config['model'] || 'gpt-3.5-turbo'
     marker = "Translated by ChatGPT #{model}/#{version}"
     site.posts.docs.shuffle.each do |doc|
@@ -69,14 +70,18 @@ class GptTranslate::Generator < Jekyll::Generator
         dest = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).destination(site.dest)
         doc.data["translated-#{lang}-url"] = link
         doc.data['chatgpt-model'] = model
-        next if GptTranslate::Ping.new(site, link).found?(dest, version)
+        if GptTranslate::Ping.new(site, link).found?(dest, version)
+          copied += 1
+          next
+        end
+        next if translated >= threshold
         gpt = GptTranslate::ChatGPT.new(
           key,
           model,
           config['source'] || 'en',
           lang
         )
-        translated = gpt.translate(plain)
+        foreign = gpt.translate(plain)
         File.write(
           path,
           [
@@ -90,21 +95,17 @@ class GptTranslate::Generator < Jekyll::Generator
             "chatgpt-model: #{model.to_json}",
             '---',
             '',
-            translated,
+            foreign,
             '',
             "#{marker} on #{Time.now.strftime('%d/%m/%Y %H:%M')}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
         site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
-        total += 1
+        translated += 1
         Jekyll.logger.info("Translated via ChatGPT: #{path} (#{File.size(path)} bytes)")
       end
-      if total >= threshold
-        Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
-        break
-      end
     end
-    Jekyll.logger.info("#{total} pages translated in #{(Time.now - start).round(2)}s")
+    Jekyll.logger.info("#{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")
   end
 
   private

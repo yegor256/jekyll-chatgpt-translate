@@ -175,7 +175,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
       gen = GptTranslate::Generator.new
       stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
       gen.generate(site)
-      assert_equal(2, site.pages.count)
+      assert_equal(1, site.pages.count)
     end
   end
 end
