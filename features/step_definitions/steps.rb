@@ -45,12 +45,12 @@ When(/^I build Jekyll site$/) do
   @exitstatus = $CHILD_STATUS.exitstatus
 end
 
-Then(/^Stdout contains "([^"]*)"$/) do |txt|
-  raise "STDOUT doesn't contain '#{txt}':\n#{@stdout}" unless @stdout.include?(txt)
+Then('Stdout contains {string}') do |string|
+  raise "STDOUT doesn't contain '#{string}':\n#{@stdout}" unless @stdout.include?(string)
 end
 
-Then(/^File "([^"]*)" exists$/) do |name|
-  raise "The file \"#{name}\" is absent:\n#{`tree -s`}" unless File.exist?(name)
+Then('File {string} exists') do |string|
+  raise "The file \"#{string}\" is absent:\n#{`tree -s`}" unless File.exist?(string)
 end
 
 Then('File {string} contains {string}') do |string, string2|
