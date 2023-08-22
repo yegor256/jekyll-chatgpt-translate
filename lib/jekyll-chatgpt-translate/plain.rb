@@ -39,7 +39,7 @@ class GptTranslate::Plain
 
   def to_s
     # To turn compact lists into proper lists
-    @markdown.gsub(/([^\n])\n(\s*\*)/, "\\1\n\n\\2").split(/\n{2,}/).compact.map do |par|
+    @markdown.gsub(/([^\n])\n(\s*\* )/, "\\1\n\n\\2").split(/\n{2,}/).compact.map do |par|
       par.strip!
       # Liquid tags are removed, but this implementation is primitive
       # Seehttps://stackoverflow.com/questions/

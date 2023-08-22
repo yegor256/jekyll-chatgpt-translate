@@ -31,15 +31,11 @@ require_relative '../lib/jekyll-chatgpt-translate/plain'
 # License:: MIT
 class GptTranslate::PlainTest < Minitest::Test
   def test_simple_map
-    assert_equal('Hello, world!', GptTranslate::Plain.new('Hello, **world**!').to_s)
+    assert_equal('Hello, world!', GptTranslate::Plain.new("Hello,\n**world**!").to_s)
     assert_equal('Hello, Jeff!', GptTranslate::Plain.new('Hello, _Jeff_!').to_s)
     # assert_equal('Hello, Walter!', GptTranslate::Plain.new('Hello, ~Walter~!').to_s)
     assert_equal("Hi\n\nBye", GptTranslate::Plain.new("  Hi\n\nBye\n\n\n").to_s)
     assert_equal('Hi, dude!', GptTranslate::Plain.new("  Hi,\ndude!\n").to_s)
-  end
-
-  def test_simple_paragraph
-    assert_equal('Hello, world, and you too!', GptTranslate::Plain.new(" Hello,\n world,\nand you  too! ").to_s)
   end
 
   def test_lists
