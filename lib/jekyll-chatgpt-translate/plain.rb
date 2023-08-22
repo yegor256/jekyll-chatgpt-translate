@@ -23,7 +23,7 @@
 # SOFTWARE.
 
 require 'redcarpet'
-require 'liquid'
+# require 'liquid'
 
 # The module we are in.
 module GptTranslate; end
@@ -42,9 +42,9 @@ class GptTranslate::Plain
     @markdown.split(/\n{2,}/).compact.map do |par|
       par.gsub!("\n", ' ')
       par.gsub!(/\s{2,}/, ' ')
+      par.gsub!(/{{[^}]+}}/, '') # Liquid tags
+      par.gsub!(/{%[^%]+%}/, '') # Liquid tags
       par.strip!
-      liquid = Liquid::Template.parse(par)
-      par = liquid.render({}, drop: NullDrop.new, registers: { removed: true })
       Redcarpet::Markdown.new(Strip).render(par)
     end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
   end

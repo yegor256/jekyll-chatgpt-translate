@@ -45,7 +45,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'iri', '>= 0'
   s.add_runtime_dependency 'iso-639', '>= 0'
   s.add_runtime_dependency 'jekyll', '>= 3'
-  s.add_runtime_dependency 'liquid', '>= 4'
+  # s.add_runtime_dependency 'liquid', '>= 4'
   s.add_runtime_dependency 'redcarpet', '>= 3'
   s.add_runtime_dependency 'ruby-openai', '>= 5'
   s.metadata['rubygems_mfa_required'] = 'true'
