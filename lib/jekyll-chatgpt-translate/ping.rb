@@ -25,6 +25,7 @@
 require 'iri'
 require 'net/http'
 require 'uri'
+require 'fileutils'
 require_relative 'version'
 
 # see https://stackoverflow.com/a/6048451/187141
@@ -46,17 +47,17 @@ class GptTranslate::Ping
     @path = path
   end
 
-  def found?(file)
+  def found?(file, marker)
     home = @site.config['url']
     return false if home.nil?
     uri = Iri.new(home).path(@path)
     before = Net::HTTP.get_response(URI(uri.to_s))
     if before.is_a?(Net::HTTPSuccess)
       html = before.body
-      if html.include?("/#{GptTranslate::VERSION}")
+      if html.include?(marker)
         Jekyll.logger.info("No need to translate, the page exists at \
 #{uri} (#{html.split.count} words), saved to #{file}")
-        File.mkdir_p(File.dirname(file))
+        FileUtils.mkdir_p(File.dirname(file))
         File.write(file, html)
         return true
       end

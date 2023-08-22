@@ -54,14 +54,15 @@ class GptTranslate::Generator < Jekyll::Generator
     threshold = config['threshold'] || 1_000_000_000
     start = Time.now
     total = 0
+    model = config['model'] || 'gpt-3.5-turbo'
+    marker = "Translated by ChatGPT #{model}/#{version}"
     site.posts.docs.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
-        next if GptTranslate::Ping.new(site, link).found?(doc.path)
+        next if GptTranslate::Ping.new(site, link).found?(doc.path, version)
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
-        model = config['model'] || 'gpt-3.5-turbo'
         if total >= threshold
           Jekyll.logger.info("Already generated #{total} pages, that's enough for today")
           break
@@ -88,7 +89,7 @@ class GptTranslate::Generator < Jekyll::Generator
             '',
             translated,
             '',
-            "Translated by ChatGPT #{model}/#{version}\n{: .jekyll-chatgpt-translate}"
+            "#{marker}\n{: .jekyll-chatgpt-translate}"
           ].join("\n")
         )
         doc.data["translated-#{lang}-url"] = link

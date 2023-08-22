@@ -46,7 +46,7 @@ class GptTranslate::PingTest < Minitest::Test
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/about-me.html')
     Tempfile.open do |f|
-      assert(!ping.found?(f))
+      assert(ping.found?(f, ''))
     end
   end
 
@@ -55,7 +55,7 @@ class GptTranslate::PingTest < Minitest::Test
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/absent.html')
     Tempfile.open do |f|
-      assert(!ping.found?(f))
+      assert(!ping.found?(f, ''))
     end
   end
 
