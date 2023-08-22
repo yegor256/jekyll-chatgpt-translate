@@ -82,7 +82,7 @@ class GptTranslate::Plain
       elsif content.end_with?("\n")
         "```\n#{content.split("\n", 2)[1]}```"
       else
-        content
+        "`#{content}`"
       end
     end
 

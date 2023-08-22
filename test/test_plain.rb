@@ -73,7 +73,7 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_code
     assert_equal(
-      'Hello, Java!',
+      'Hello, `Java`!',
       GptTranslate::Plain.new('Hello, `Java`!').to_s
     )
   end
