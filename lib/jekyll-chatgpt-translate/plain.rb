@@ -71,6 +71,10 @@ class GptTranslate::Plain
       end
     end
 
+    def header(text, level)
+      "#{'#' * level} #{text}"
+    end
+
     def codespan(content)
       if content.start_with?("\n")
         "```#{content}```"
