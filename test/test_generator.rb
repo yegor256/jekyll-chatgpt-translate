@@ -35,13 +35,13 @@ class GptTranslate::GeneratorTest < Minitest::Test
   class FakeSite
     attr_reader :config
 
-    def initialize(config, doc)
+    def initialize(config, docs)
       @config = config
-      @doc = doc
+      @docs = docs
     end
 
     def posts
-      FakePosts.new(@doc)
+      FakePosts.new(@docs)
     end
 
     def pages
@@ -118,12 +118,12 @@ class GptTranslate::GeneratorTest < Minitest::Test
   class FakePosts
     attr_reader :config
 
-    def initialize(doc)
-      @doc = doc
+    def initialize(docs)
+      @docs = docs
     end
 
     def docs
-      [FakeDocument.new(@doc)]
+      @docs.map { |d| FakeDocument.new(d) }
     end
   end
 
@@ -137,14 +137,45 @@ class GptTranslate::GeneratorTest < Minitest::Test
           'chatgpt-translate' => {
             'targets' => [
               {
-                'language' => 'cn',
+                'language' => 'zh',
                 'layout' => 'chinese',
                 'permalink' => ':slug.html'
               }
             ]
           }
         },
-        FakeDocument.new({})
+        [post]
+      )
+      gen = GptTranslate::Generator.new
+      stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
+      gen.generate(site)
+    end
+  end
+
+  def test_threshold_stops
+    Dir.mktmpdir do |home|
+      post = File.join(home, '2023-01-01-hello.md')
+      File.write(post, "---\ntitle: Hello\n---\n\nHello, world!")
+      site = FakeSite.new(
+        {
+          'url' => 'https://www.yegor256.com/',
+          'chatgpt-translate' => {
+            'threshold' => 1,
+            'targets' => [
+              {
+                'language' => 'zh',
+                'layout' => 'chinese',
+                'permalink' => ':slug.html'
+              },
+              {
+                'language' => 'fr',
+                'layout' => 'french',
+                'permalink' => ':year/:slug.html'
+              }
+            ]
+          }
+        },
+        [post, post]
       )
       gen = GptTranslate::Generator.new
       stub_request(:get, 'https://www.yegor256.com/.html').to_return(body: '')
