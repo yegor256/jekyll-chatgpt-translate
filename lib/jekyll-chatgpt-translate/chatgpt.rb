@@ -82,7 +82,10 @@ class GptTranslate::ChatGPT
       Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
     rescue StandardError => e
       attempt += 1
-      retry if attempt < 4
+      if attempt < 4
+        Jekyll.logger.error("ChatGPT failed to answer to #{prompt.inspect}: #{e.message.inspect}")
+        retry
+      end
       raise e
     end
     Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
