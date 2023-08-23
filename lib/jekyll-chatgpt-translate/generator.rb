@@ -69,7 +69,8 @@ class GptTranslate::Generator < Jekyll::Generator
         FileUtils.mkdir_p(File.dirname(path))
         File.write(path, '') # in order to surpress warnings in Page ctor
         url = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).url
-        if config['no_download'].nil? && GptTranslate::Ping.new(site, link).found?(File.join(site.dest, url), version)
+        ping = GptTranslate::Ping.new(site, link)
+        if config['no_download'].nil? && ping.found?(File.join(site.dest, url), version)
           copied += 1
         elsif translated >= threshold
           next
