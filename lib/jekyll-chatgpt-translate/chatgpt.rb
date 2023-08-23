@@ -86,6 +86,7 @@ class GptTranslate::ChatGPT
         }
       )
       answer = response.dig('choices', 0, 'message', 'content')
+      raise 'No content returned by ChatGPT' if answer.nil?
       Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
     rescue StandardError => e
       attempt += 1
