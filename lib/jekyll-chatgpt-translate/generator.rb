@@ -58,7 +58,7 @@ class GptTranslate::Generator < Jekyll::Generator
     translated = 0
     copied = 0
     model = config['model'] || 'gpt-3.5-turbo'
-    marker = "Translated by ChatGPT #{model}/#{version}"
+    marker = "Translated by ChatGPT #{model}#{version.empty? ? '' : "/#{version}"}"
     site.posts.docs.shuffle.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
@@ -70,7 +70,7 @@ class GptTranslate::Generator < Jekyll::Generator
         File.write(path, '') # in order to surpress warnings in Page ctor
         url = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).url
         ping = GptTranslate::Ping.new(site, link)
-        if config['no_download'].nil? && ping.found?(File.join(site.dest, url), version)
+        if config['no_download'].nil? && ping.found?(File.join(site.dest, url), version.empty? ? '' : marker)
           copied += 1
         elsif translated >= threshold
           next
