@@ -67,7 +67,7 @@ class GptTranslate::Ping
         Jekyll.logger.info("The page is absent, will translate #{uri.inspect} (#{before.code})")
       end
       Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
-    rescue Errno::ECONNREFUSED => e
+    rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL => e
       Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
       Jekyll.logger.info("The page is absent (#{e.class.name}): #{uri.inspect}")
     end
