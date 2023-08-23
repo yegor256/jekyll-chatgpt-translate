@@ -83,7 +83,8 @@ class GptTranslate::ChatGPT
     rescue StandardError => e
       attempt += 1
       if attempt < 4
-        Jekyll.logger.error("ChatGPT failed to answer to #{prompt.inspect}: #{e.message.inspect}")
+        Jekyll.logger.error("ChatGPT failed to answer to #{prompt.inspect} \
+(attempt no.#{attempt}): #{e.message.inspect}")
         retry
       end
       raise e
