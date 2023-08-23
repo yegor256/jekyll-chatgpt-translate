@@ -69,7 +69,7 @@ class GptTranslate::Ping
       Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
     rescue StandardError => e
       Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
-      Jekyll.logger.info("The page is absent: #{uri.inspect}")
+      Jekyll.logger.info("The page is absent (#{e.class.name}): #{uri.inspect}")
     end
     false
   end
