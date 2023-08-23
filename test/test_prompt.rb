@@ -35,7 +35,7 @@ class GptTranslate::PromptTest < Minitest::Test
     [
       'Please, translate the following Markdown paragraph',
       " from #{source} to #{target},",
-      " don't change proper nouns:\n\n#{body}"
+      " don't translate technical terms and proper nouns:\n\n#{body}"
     ].join
   end
 

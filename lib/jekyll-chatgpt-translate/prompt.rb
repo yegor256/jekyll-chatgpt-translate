@@ -52,7 +52,7 @@ class GptTranslate::Prompt
       from[3],
       ' to ',
       to[3],
-      ', don\'t change proper nouns'
+      ', don\'t translate technical terms and proper nouns'
     ].join
     "#{head}:\n\n#{@par}"
   end
