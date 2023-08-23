@@ -24,3 +24,6 @@ $stdout.sync = true
 
 require 'simplecov'
 SimpleCov.start
+
+require 'jekyll'
+Jekyll.logger.adjust_verbosity(verbose: true)

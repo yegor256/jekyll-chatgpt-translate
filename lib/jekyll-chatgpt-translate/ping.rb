@@ -50,26 +50,26 @@ class GptTranslate::Ping
   def found?(file, marker)
     home = @site.config['url']
     return false if home.nil?
-    uri = Iri.new(home).path(@path)
+    uri = Iri.new(home).path(@path).to_s
     begin
-      before = Net::HTTP.get_response(URI(uri.to_s))
+      before = Net::HTTP.get_response(URI(uri))
       if before.is_a?(Net::HTTPSuccess)
         html = before.body
         if html.include?(marker)
           Jekyll.logger.info("No need to translate, the page exists at \
-\"#{uri}\" (#{html.split.count} words), saved to \"#{file}\"")
+#{uri.inspect} (#{html.split.count} words), saved to #{file.inspect}")
           FileUtils.mkdir_p(File.dirname(file))
           File.write(file, html)
           return true
         end
-        Jekyll.logger.info("Re-translation required for \"#{uri}\"")
+        Jekyll.logger.info("Re-translation required for #{uri.inspect}")
       else
-        Jekyll.logger.info("The page is absent, will translate \"#{uri}\"")
+        Jekyll.logger.info("The page is absent, will translate #{uri.inspect}")
       end
-      Jekyll.logger.debug("GET \"#{uri}\": #{before.code}")
+      Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
     rescue StandardError => e
-      Jekyll.logger.debug("Failed to ping \"#{uri}\": #{e.message}")
-      Jekyll.logger.info("The page is absent: \"#{uri}\"")
+      Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
+      Jekyll.logger.info("The page is absent: #{uri.inspect}")
     end
     false
   end

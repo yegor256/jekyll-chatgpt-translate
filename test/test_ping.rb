@@ -26,6 +26,7 @@ require 'minitest/autorun'
 require 'webmock/minitest'
 require 'jekyll'
 require 'tempfile'
+require_relative 'test__helper'
 require_relative '../lib/jekyll-chatgpt-translate/ping'
 
 # Ping test.

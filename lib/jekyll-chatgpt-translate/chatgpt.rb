@@ -50,10 +50,10 @@ class GptTranslate::ChatGPT
   def translate(text, min: 32)
     text.split("\n\n").compact.map do |par|
       if par.length < min
-        Jekyll.logger.debug("Not translating this, b/c too short: \"#{par}\"")
+        Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
         par
       elsif par !~ /^[[[:alpha:]]'"]/
-        Jekyll.logger.debug("Not translating this, b/c it's not a plain text: \"#{par}\"")
+        Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
         par
       elsif @key.empty?
         par
@@ -79,7 +79,7 @@ class GptTranslate::ChatGPT
         }
       )
       answer = response.dig('choices', 0, 'message', 'content')
-      Jekyll.logger.debug("ChatGPT prompt: \"#{prompt}\", ChatGPT answer: \"#{answer}\"")
+      Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
     rescue StandardError => e
       attempt += 1
       retry if attempt < 4

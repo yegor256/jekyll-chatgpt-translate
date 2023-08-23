@@ -24,6 +24,7 @@
 
 require 'minitest/autorun'
 require 'webmock/minitest'
+require_relative 'test__helper'
 require_relative '../lib/jekyll-chatgpt-translate/chatgpt'
 
 # ChatGPT test.
@@ -38,7 +39,27 @@ class GptTranslate::ChatGPTTest < Minitest::Test
 
   def test_dry_mode
     chat = GptTranslate::ChatGPT.new('', 'gpt-3.5-turbo', 'en', 'ru')
-    assert_equal(38, chat.translate('This text should not be sent to OpenAI').length)
+    assert_equal(38, chat.translate('This text should not be sent to OpenAI', min: 100).length)
+  end
+
+  def test_no_translation
+    chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'xx')
+    chat.translate(
+      "
+      How are you, my friend?
+
+      Read this Java code:
+
+      ```
+      System.out.println(\"Hello, dude!\");
+      System.out.println(\"Good bye!\");
+      System.out.println(\"Done!\");
+      ```
+
+      This is it.
+      ",
+      min: 40
+    )
   end
 
   def test_markup

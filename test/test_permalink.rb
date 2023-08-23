@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'minitest/autorun'
+require_relative 'test__helper'
 require_relative '../lib/jekyll-chatgpt-translate/permalink'
 
 # Permalink test.

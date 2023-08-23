@@ -25,6 +25,7 @@
 require 'minitest/autorun'
 require 'tmpdir'
 require 'webmock/minitest'
+require_relative 'test__helper'
 require_relative '../lib/jekyll-chatgpt-translate/generator'
 
 # Generator test.

@@ -44,9 +44,9 @@ class GptTranslate::Prompt
 
   def to_s
     from = ISO_639.find_by_code(@source)
-    raise "Unknown source language ISO-639 code: \"#{@source}\"" if from.nil?
+    raise "Unknown source language ISO-639 code: #{@source.inspect}" if from.nil?
     to = ISO_639.find_by_code(@target)
-    raise "Unknown source language ISO-639 code: \"#{@target}\"" if to.nil?
+    raise "Unknown source language ISO-639 code: #{@target.inspect}" if to.nil?
     head = [
       'Please, translate the following Markdown paragraph from ',
       from[3],
