@@ -40,6 +40,7 @@ Feature: Simple site building
     Hello, world!
     """
     Then I build Jekyll site
+    And Exit code is zero
     And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" exists
     And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "/2023-01-01-hello-chinese.html"
     And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "translated-language: \"zh\""
@@ -48,5 +49,4 @@ Feature: Simple site building
     And File "_site/2023-01-01-hello-chinese.html" exists
     And File "_site/2023-01-01-hello-chinese.html" contains "The original: /2023/01/01/hello.html"
     And File "_site/2023/hello-french.html" exists
-    And Exit code is zero
 

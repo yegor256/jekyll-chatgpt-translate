@@ -67,7 +67,20 @@ class GptTranslate::Generator < Jekyll::Generator
         raise 'Language must be defined for each target' if target.nil?
         path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
         FileUtils.mkdir_p(File.dirname(path))
-        File.write(path, '') # in order to surpress warnings in Page ctor
+        File.write(
+          path,
+          [
+            '---',
+            "layout: #{target['layout'] || layout}",
+            "title: #{doc['title'].to_json}",
+            "description: #{doc['description'].to_json}",
+            "permalink: #{link.to_json}",
+            "translated-original-url: #{doc.url.to_json}",
+            "translated-language: #{lang.to_json}",
+            "chatgpt-model: #{model.to_json}",
+            '---'
+          ].join("\n")
+        )
         url = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).url
         ping = GptTranslate::Ping.new(site, link)
         if config['no_download'].nil? && ping.found?(File.join(site.dest, url), version.empty? ? '' : marker)
@@ -85,20 +98,12 @@ class GptTranslate::Generator < Jekyll::Generator
           File.write(
             path,
             [
-              '---',
-              "layout: #{target['layout'] || layout}",
-              "title: #{doc['title'].to_json}",
-              "description: #{doc['description'].to_json}",
-              "permalink: #{link.to_json}",
-              "translated-original-url: #{doc.url.to_json}",
-              "translated-language: #{lang.to_json}",
-              "chatgpt-model: #{model.to_json}",
-              '---',
               '',
               foreign,
               '',
               "#{marker} on #{Time.now.strftime('%Y-%m-%d at %H:%M')}\n{: .jekyll-chatgpt-translate}"
-            ].join("\n")
+            ].join("\n"),
+            mode: 'a+'
           )
           site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
           translated += 1
