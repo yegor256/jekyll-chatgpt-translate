@@ -81,9 +81,8 @@ class GptTranslate::Generator < Jekyll::Generator
             '---'
           ].join("\n")
         )
-        url = Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path)).url
         ping = GptTranslate::Ping.new(site, link)
-        if config['no_download'].nil? && ping.found?(File.join(site.dest, url), version.empty? ? '' : marker)
+        if config['no_download'].nil? && ping.found?(version.empty? ? '' : marker)
           copied += 1
         elsif translated >= threshold
           next
@@ -134,6 +133,10 @@ class GptTranslate::Generator < Jekyll::Generator
     else
       Jekyll.logger.info("The file with the OpenAI API key is not found: #{file.inspect}")
       nil
+    end
+    if key.nil? && config['api_key']
+      Jekyll.logger.info("The OpenAI API key is found in 'api_key' of _config.yml")
+      key = config['api_key']
     end
     if key.nil? && Jekyll.env == 'development'
       Jekyll.logger.info("OPENAI_API_KEY environment variable is not set, \

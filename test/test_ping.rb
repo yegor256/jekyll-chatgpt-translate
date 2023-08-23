@@ -34,41 +34,28 @@ require_relative '../lib/jekyll-chatgpt-translate/ping'
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::PingTest < Minitest::Test
-  class FakeSite
-    attr_reader :config
-
-    def initialize(config)
-      @config = config
-    end
-  end
-
   def test_when_exists
     stub_request(:any, 'https://www.yegor256.com/about-me.html').to_return(body: 'Hello!')
-    site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
+    site = GptTranslate::FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/about-me.html')
-    Tempfile.open do |f|
-      assert(ping.found?(f, ''))
-      assert_equal('Hello!', File.read(f))
-    end
+    assert(ping.found?(''))
+    assert_equal(1, site.static_files.size)
   end
 
   def test_when_not_exists
     stub_request(:any, 'https://www.yegor256.com/absent.html').to_return(status: 404)
-    site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
+    site = GptTranslate::FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/absent.html')
-    Tempfile.open do |f|
-      assert(!ping.found?(f, ''))
-      assert_equal('', File.read(f))
-    end
+    assert(!ping.found?(''))
+    assert_equal(0, site.static_files.size)
   end
 
   def test_wrong_address
     WebMock.allow_net_connect!
-    site = FakeSite.new({ 'url' => 'https://localhost:1/' })
+    site = GptTranslate::FakeSite.new({ 'url' => 'https://localhost:1/' })
     ping = GptTranslate::Ping.new(site, '/boom.html')
-    Tempfile.open do |f|
-      assert(!ping.found?(f, ''))
-    end
+    assert(!ping.found?(''))
+    assert_equal(0, site.static_files.size)
   end
 
   def test_relative_path

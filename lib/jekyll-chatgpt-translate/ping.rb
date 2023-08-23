@@ -25,6 +25,7 @@
 require 'iri'
 require 'net/http'
 require 'uri'
+require 'jekyll'
 require 'fileutils'
 require_relative 'version'
 
@@ -47,7 +48,7 @@ class GptTranslate::Ping
     @path = path
   end
 
-  def found?(file, marker)
+  def found?(marker)
     home = @site.config['url']
     return false if home.nil?
     uri = Iri.new(home).path(@path).to_s
@@ -57,9 +58,8 @@ class GptTranslate::Ping
         html = before.body
         if html.include?(marker)
           Jekyll.logger.info("No need to translate, the page exists at \
-#{uri.inspect} (#{html.split.count} words), saved to #{file.inspect}")
-          FileUtils.mkdir_p(File.dirname(file))
-          File.write(file, html)
+#{uri.inspect} (#{html.split.count} words)")
+          @site.static_files << DownloadedFile.new(@site, @path, html)
           return true
         end
         Jekyll.logger.info("Re-translation required for #{uri.inspect}")
@@ -67,10 +67,25 @@ class GptTranslate::Ping
         Jekyll.logger.info("The page is absent, will translate #{uri.inspect} (#{before.code})")
       end
       Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
-    rescue StandardError => e
+    rescue Errno::ECONNREFUSED => e
       Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
       Jekyll.logger.info("The page is absent (#{e.class.name}): #{uri.inspect}")
     end
     false
+  end
+
+  # The file we just downloaded.
+  class DownloadedFile < Jekyll::StaticFile
+    def initialize(site, path, html)
+      super(site, site.dest, '', path)
+      @html = html
+    end
+
+    def write(_dest)
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, @html)
+      Jekyll.logger.info("Saved #{@html.split.count} words to #{path.inspect}")
+      true
+    end
   end
 end

@@ -31,6 +31,11 @@ Feature: Simple site building
     Chinese: {{ content }}
     The original: {{ page.translated-original-url }}
     """
+    And I have a "_layouts/translated.html" file with content:
+    """
+    French: {{ content }}
+    The original: {{ page.translated-original-url }}
+    """
     And I have a "_posts/2023-01-01-hello.md" file with content:
     """
     ---
@@ -49,3 +54,34 @@ Feature: Simple site building
     And File "_site/2023-01-01-hello-chinese.html" exists
     And File "_site/2023-01-01-hello-chinese.html" contains "The original: /2023/01/01/hello.html"
     And File "_site/2023/hello-french.html" exists
+
+  Scenario: Simple download of existing page
+    Given I have a "_config.yml" file with content:
+    """
+    url: https://www.yegor256.com
+    markdown: kramdown
+    plugins:
+      - jekyll-chatgpt-translate
+    chatgpt-translate:
+      source: en
+      version: ""
+      api_key: "it-is-not-used, because EN to EN translation"
+      layout: should-not-be-used
+      targets:
+        -
+          language: en
+          permalink: about-me.html
+    """
+    And I have a "_posts/2023-01-01-hello.md" file with content:
+    """
+    ---
+    title: foo
+    ---
+    foo
+    """
+    Then I build Jekyll site
+    And Exit code is zero
+    And Stdout contains "No need to translate, the page exists"
+    And File "_site/2023/01/01/hello.html" exists
+    And File "_site/about-me.html" exists
+    And File "_site/about-me.html" contains "Yegor Bugayenko"

@@ -33,98 +33,11 @@ require_relative '../lib/jekyll-chatgpt-translate/generator'
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::GeneratorTest < Minitest::Test
-  class FakeSite
-    attr_reader :config, :pages
-
-    def initialize(config, docs)
-      @config = config
-      @docs = docs
-      @pages = []
-    end
-
-    def posts
-      FakePosts.new(@docs)
-    end
-
-    def permalink_style
-      ''
-    end
-
-    def frontmatter_defaults
-      Jekyll::FrontmatterDefaults.new(self)
-    end
-
-    def converters
-      [Jekyll::Converters::Markdown.new({ 'markdown_ext' => 'md' })]
-    end
-
-    def source
-      ''
-    end
-
-    def dest
-      File.dirname(@docs[0])
-    end
-
-    def in_theme_dir(base, _foo = nil, _bar = nil)
-      base
-    end
-
-    def in_dest_dir(*paths)
-      paths[0].dup
-    end
-  end
-
-  class FakeDocument
-    attr_reader :data
-
-    def initialize(path)
-      @path = path
-      @data = { 'date' => Time.now, 'title' => 'Hello!' }
-    end
-
-    def content
-      'Hello, world!'
-    end
-
-    def []=(key, value)
-      @data[key] = value
-    end
-
-    def [](key)
-      @data[key] || ''
-    end
-
-    def relative_path
-      @path
-    end
-
-    def url
-      '2023-01-01-hello.html'
-    end
-
-    def basename
-      '2023-01-01-hello.md'
-    end
-  end
-
-  class FakePosts
-    attr_reader :config
-
-    def initialize(docs)
-      @docs = docs
-    end
-
-    def docs
-      @docs.map { |d| FakeDocument.new(d) }
-    end
-  end
-
   def test_simple_scenario
     Dir.mktmpdir do |home|
       post = File.join(home, '2023-01-01-hello.md')
       File.write(post, "---\ntitle: Hello\n---\n\nHello, world!")
-      site = FakeSite.new(
+      site = GptTranslate::FakeSite.new(
         {
           'url' => 'https://www.yegor256.com/',
           'chatgpt-translate' => {
@@ -150,7 +63,7 @@ class GptTranslate::GeneratorTest < Minitest::Test
     Dir.mktmpdir do |home|
       post = File.join(home, '2023-01-01-hello.md')
       File.write(post, "---\ntitle: Hello\n---\n\nHello, world!")
-      site = FakeSite.new(
+      site = GptTranslate::FakeSite.new(
         {
           'chatgpt-translate' => {
             'threshold' => 1,
