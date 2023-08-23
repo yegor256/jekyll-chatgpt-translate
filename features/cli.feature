@@ -49,4 +49,3 @@ Feature: Simple site building
     And File "_site/2023-01-01-hello-chinese.html" exists
     And File "_site/2023-01-01-hello-chinese.html" contains "The original: /2023/01/01/hello.html"
     And File "_site/2023/hello-french.html" exists
-

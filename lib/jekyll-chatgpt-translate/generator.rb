@@ -113,7 +113,8 @@ class GptTranslate::Generator < Jekyll::Generator
         doc.data['chatgpt-model'] = model
       end
     end
-    Jekyll.logger.info("#{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")
+    Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION}: \
+#{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")
   end
 
   private
