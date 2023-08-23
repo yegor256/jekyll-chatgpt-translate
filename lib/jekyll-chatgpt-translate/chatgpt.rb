@@ -50,7 +50,10 @@ class GptTranslate::ChatGPT
   def translate(markdown, min: 32)
     markdown.split(/\n{2,}/).compact.map do |par|
       par.strip!
-      if par.length < min
+      if @source == @target
+        Jekyll.logger.debug("No need to translate from #{@source.inspect} to #{@target.inspect}: #{par.inspect}")
+        par
+      elsif par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
         par
       elsif par.start_with?('```') || par.end_with?('```')
