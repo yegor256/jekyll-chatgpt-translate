@@ -64,7 +64,7 @@ class GptTranslate::Ping
         end
         Jekyll.logger.info("Re-translation required for #{uri.inspect}")
       else
-        Jekyll.logger.info("The page is absent, will translate #{uri.inspect}")
+        Jekyll.logger.info("The page is absent, will translate #{uri.inspect} (#{before.code})")
       end
       Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
     rescue StandardError => e
