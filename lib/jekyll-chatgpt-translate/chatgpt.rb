@@ -47,12 +47,12 @@ class GptTranslate::ChatGPT
     @target = target
   end
 
-  def translate(text, min: 32)
-    text.split("\n\n").compact.map do |par|
+  def translate(markdown, min: 32)
+    markdown.split(/\n{2,}/).compact.map do |par|
       if par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
         par
-      elsif par !~ /^[[[:alpha:]]'"]/
+      elsif par =~ /^[^\p{Alpha}'"]/
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
         par
       elsif @key.empty?
