@@ -37,32 +37,28 @@ class GptTranslate::Plain
     @markdown = markdown
   end
 
+  # Liquid tags are removed, but this implementation is primitive
+  # Seehttps://stackoverflow.com/questions/
   def to_s
-    # To turn compact lists into proper lists
-    @markdown.gsub(/([^\n])\n(\s*\* )/, "\\1\n\n\\2").split(/\n{2,}/).compact.map do |par|
-      par.strip!
-      # Liquid tags are removed, but this implementation is primitive
-      # Seehttps://stackoverflow.com/questions/
-      par.gsub!(/{{[^}]+}}/, '')
-      par.gsub!(/{%.+?%}/, '')
-      par.gsub!(/<!--.+?-->/m, '')
-      par = Redcarpet::Markdown.new(Strip).render(par)
-      par.gsub!("\t", '  ')
-      par.gsub!(/\n+/, ' ') unless par.start_with?('```')
-      par.gsub!(/ {2,}/, ' ') unless par.start_with?('```')
-      par.strip
-    end.join("\n\n").gsub(/\n{2,}/, "\n\n").strip
+    Redcarpet::Markdown.new(Strip).render(
+      @markdown
+        .gsub(/([^\n])\n(\s*\* )/, "\\1\n\n\\2")
+        .gsub(/<!--.+?-->/m, '')
+        .gsub(/{{[^}]+}}/, '')
+        .gsub(/{%.+?%}/, '')
+    ).strip
   end
 
   # Markdown to pain text.
   # Motivated by https://github.com/vmg/redcarpet/blob/master/lib/redcarpet/render_strip.rb
   class Strip < Redcarpet::Render::Base
     %i[
-      block_code block_quote
+      block_quote
       block_html
-      autolink double_emphasis
-      emphasis underline
-      triple_emphasis strikethrough
+      autolink
+      underline
+      triple_emphasis
+      strikethrough
       superscript highlight quote
       footnotes footnote_def footnote_ref
       entity normal_text
@@ -76,12 +72,16 @@ class GptTranslate::Plain
       "**#{txt}**"
     end
 
+    def block_code(code, _lang)
+      code
+    end
+
     def emphasis(txt)
       "*#{txt}*"
     end
 
     def header(text, level)
-      "#{'#' * level} #{text}"
+      "#{'#' * level} #{text}\n\n"
     end
 
     def codespan(content)
@@ -98,8 +98,8 @@ class GptTranslate::Plain
       "![#{alt}](#{link} \"#{title}\")"
     end
 
-    def raw_html(content)
-      content
+    def raw_html(html)
+      html
     end
 
     def list(content, _type)
@@ -107,11 +107,15 @@ class GptTranslate::Plain
     end
 
     def list_item(content, _type)
-      content
+      "#{content.strip}\n\n"
     end
 
     def paragraph(text)
-      text
+      unless text.start_with?('```')
+        text.gsub!(/\n+/, ' ')
+        text.gsub!(/\s{2,}/, ' ')
+      end
+      "#{text}\n\n"
     end
 
     def link(link, _title, content)

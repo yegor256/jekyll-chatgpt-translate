@@ -80,8 +80,20 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_code_block
     assert_equal(
+      "```\na\na\na\na\na\na\na\n\n```",
+      GptTranslate::Plain.new("```\na\na\na\na\na\na\na\n\n```").to_s
+    )
+    assert_equal(
       "Hello:\n\n```\nJava\n```",
       GptTranslate::Plain.new("Hello:\n\n```\nJava\n```\n").to_s
+    )
+    assert_equal(
+      "```\nHello\n```",
+      GptTranslate::Plain.new("```\nHello\n```").to_s
+    )
+    assert_equal(
+      "```\nprint('hi!')\n```",
+      GptTranslate::Plain.new("```java\nprint('hi!')\n```").to_s
     )
   end
 
@@ -101,17 +113,6 @@ class GptTranslate::PlainTest < Minitest::Test
       GptTranslate::Plain.new('This is picture: <img src="a"/>!').to_s
     )
     assert_equal('<img src="a"/>', GptTranslate::Plain.new('<img src="a"/>').to_s)
-  end
-
-  def test_big_code
-    assert_equal(
-      "```\nHello\n```",
-      GptTranslate::Plain.new("```\nHello\n```").to_s
-    )
-    assert_equal(
-      "```\nprint('hi!')\n```",
-      GptTranslate::Plain.new("```java\nprint('hi!')\n```").to_s
-    )
   end
 
   def test_liquid_tags
@@ -142,5 +143,65 @@ class GptTranslate::PlainTest < Minitest::Test
       'Hello, !',
       GptTranslate::Plain.new("Hello, <!-- \nJava\n -->!").to_s
     )
+  end
+
+  def test_big_text
+    expected = "Hi, dear **friend**!
+
+In this *lovely* letter I will explain how objects work in C++:
+
+Declare a class
+
+Make an instance of it
+
+Delete the instance
+
+## More details
+
+Something like this:
+
+```
+class Foo {};
+Foo f = Foo();
+```
+
+And then use `new` and `delete` like this:
+
+```
+Foo* f = new Foo();
+delete f;
+```
+
+Should work!"
+    input = "
+Hi, dear **friend**!
+
+In this _lovely_ letter I will
+explain how objects
+work in C++:
+
+  * \tDeclare a class
+  * \tMake an instance of it
+  * \tDelete the instance
+
+## More details
+
+Something like this:
+
+```
+class Foo {};
+Foo f = Foo();
+```
+
+And then use `new` and `delete` like this:
+
+```cpp
+Foo* f = new Foo();
+delete f;
+```
+
+Should work!
+"
+    assert_equal(expected, GptTranslate::Plain.new(input).to_s)
   end
 end
