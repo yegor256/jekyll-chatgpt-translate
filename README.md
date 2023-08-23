@@ -1,4 +1,3 @@
-[![Gem Version](https://badge.fury.io/rb/glogin.svg)](http://badge.fury.io/rb/glogin)
 <img src="logo.png" style="width:256px;"/>
 
 [![rake](https://github.com/yegor256/jekyll-chatgpt-translate/actions/workflows/rake.yml/badge.svg)](https://github.com/yegor256/jekyll-chatgpt-translate/actions/workflows/rake.yml)
