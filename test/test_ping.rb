@@ -58,6 +58,7 @@ class GptTranslate::PingTest < Minitest::Test
     ping = GptTranslate::Ping.new(site, '/absent.html')
     Tempfile.open do |f|
       assert(!ping.found?(f, ''))
+      assert_equal('', File.read(f))
     end
   end
 
