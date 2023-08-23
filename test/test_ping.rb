@@ -43,11 +43,12 @@ class GptTranslate::PingTest < Minitest::Test
   end
 
   def test_when_exists
-    stub_request(:any, 'https://www.yegor256.com/about-me.html')
+    stub_request(:any, 'https://www.yegor256.com/about-me.html').to_return(body: 'Hello!')
     site = FakeSite.new({ 'url' => 'https://www.yegor256.com/' })
     ping = GptTranslate::Ping.new(site, '/about-me.html')
     Tempfile.open do |f|
       assert(ping.found?(f, ''))
+      assert_equal('Hello!', File.read(f))
     end
   end
 
