@@ -87,7 +87,7 @@ class GptTranslate::ChatGPT
     end
     Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
 to #{answer.split.count} #{@target.upcase} words \
-through #{@model} in #{(Time.now - start).round(2)}s")
+through #{@model} in #{(Time.now - start).round(2)}s: #{"#{par[0..20]}...".inspect}")
     answer
   end
 end
