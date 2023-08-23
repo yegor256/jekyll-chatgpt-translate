@@ -52,6 +52,9 @@ class GptTranslate::ChatGPT
       if par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
         par
+      elsif par.start_with?('```') || par.end_with?('```')
+        Jekyll.logger.debug("Not translating this code block: #{par.inspect}")
+        par
       elsif par =~ /^[^\p{Alnum}'"]/
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
         par
