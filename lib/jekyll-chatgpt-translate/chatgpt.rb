@@ -35,6 +35,9 @@ module GptTranslate; end
 # Copyright:: Copyright (c) 2023 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::ChatGPT
+  # Is TRUE if we already shown to the user the available models.
+  @@models_printed = false
+
   # Ctor.
   # +key+ OpenAI API Key, which can't be nil, but can be empty string, which means dry mode (no calls to OpenAI)
   # +source+ The language to translate from
@@ -77,12 +80,16 @@ class GptTranslate::ChatGPT
   private
 
   def translate_par(par)
+    client = OpenAI::Client.new(access_token: @key)
+    if @@models_printed
+      Jekyll.logger.info("Available ChatGPT models: #{client.models.list['data'].map { |m| m['id'] }.join(', ')}")
+      @@models_printed = true
+    end
+    prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
     start = Time.now
     answer = nil
     attempt = 0
     begin
-      prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
-      client = OpenAI::Client.new(access_token: @key)
       response = client.chat(
         parameters: {
           model: @model,
@@ -93,7 +100,6 @@ class GptTranslate::ChatGPT
       answer = response.dig('choices', 0, 'message', 'content')
       if answer.nil?
         Jekyll.logger.error("No content returned by ChatGPT: #{response}")
-        Jekyll.logger.info("Available ChatGPT models: #{client.models.list.data.map(&:id).join(', ')}")
         raise 'No content returned by ChatGPT'
       end
       Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
