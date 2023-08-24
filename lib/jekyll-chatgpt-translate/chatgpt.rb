@@ -66,6 +66,8 @@ class GptTranslate::ChatGPT
         par
       elsif par.start_with?('* ')
         "* #{translate_par(par[2..])}"
+      elsif par =~ /^[0-9]+\. /
+        "1. #{translate_par(par.split('.', 2)[1])}"
       else
         translate_par(par)
       end
