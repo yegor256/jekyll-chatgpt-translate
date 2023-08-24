@@ -76,9 +76,12 @@ class GptTranslate::Ping
 
   # The file we just downloaded.
   class DownloadedFile < Jekyll::StaticFile
-    def initialize(site, path, html)
-      super(site, site.dest, '', path)
+    attr_reader :link
+
+    def initialize(site, link, html)
+      super(site, site.dest, '', link)
       @html = html
+      @link = link
     end
 
     def write(_dest)

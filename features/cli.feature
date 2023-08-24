@@ -85,3 +85,38 @@ Feature: Simple site building
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/about-me.html" exists
     And File "_site/about-me.html" contains "Yegor Bugayenko"
+
+  Scenario: Simple download of existing page, but with re-translation
+    Given I have a "_config.yml" file with content:
+    """
+    url: https://www.yegor256.com
+    markdown: kramdown
+    plugins:
+      - jekyll-chatgpt-translate
+    chatgpt-translate:
+      source: en
+      version: "my-own-version"
+      api_key: "it-is-not-used, because EN to EN translation"
+      layout: default
+      targets:
+        -
+          language: en
+          permalink: about-me.html
+    """
+    And I have a "_layouts/default.html" file with content:
+    """
+    {{ content }}
+    """
+    And I have a "_posts/2023-01-01-hello.md" file with content:
+    """
+    ---
+    title: foo
+    ---
+    foo-file-foo
+    """
+    Then I build Jekyll site
+    And Exit code is zero
+    And Stdout contains "Re-translation required for"
+    And File "_site/2023/01/01/hello.html" exists
+    And File "_site/about-me.html" exists
+    And File "_site/about-me.html" contains "foo-file-foo"
