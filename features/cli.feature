@@ -103,6 +103,10 @@ Feature: Simple site building
           language: en
           permalink: about-me.html
     """
+    And I have a "boom.html" file with content:
+    """
+    Boom!
+    """
     And I have a "_layouts/default.html" file with content:
     """
     {{ content }}
@@ -120,3 +124,4 @@ Feature: Simple site building
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/about-me.html" exists
     And File "_site/about-me.html" contains "foo-file-foo"
+    And File "_site/boom.html" exists

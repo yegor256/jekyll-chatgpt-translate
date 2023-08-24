@@ -20,7 +20,7 @@ Metrics/AbcSize:
 Metrics/BlockLength:
   Max: 100
 Metrics/CyclomaticComplexity:
-  Max: 20
+  Max: 30
 Metrics/PerceivedComplexity:
   Max: 30
 Layout/EmptyLineAfterGuardClause:

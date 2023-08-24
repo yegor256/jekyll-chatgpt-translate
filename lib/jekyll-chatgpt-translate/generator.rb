@@ -106,7 +106,7 @@ class GptTranslate::Generator < Jekyll::Generator
             mode: 'a+'
           )
           site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
-          site.static_files.delete_if { |f| p f.link == link }
+          site.static_files.delete_if { |f| f.is_a?(GptTranslate::Ping::DownloadedFile) && f.link == link }
           translated += 1
           Jekyll.logger.info("Translated via ChatGPT \
 in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
