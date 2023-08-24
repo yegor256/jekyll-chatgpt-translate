@@ -93,7 +93,7 @@ class GptTranslate::ChatGPT
       answer = response.dig('choices', 0, 'message', 'content')
       if answer.nil?
         Jekyll.logger.error("No content returned by ChatGPT: #{response}")
-        Jekyll.logger.info("Available ChatGPT models: #{client.models.list}")
+        Jekyll.logger.info("Available ChatGPT models: #{client.models.list.data.map(&:id).join(', ')}")
         raise 'No content returned by ChatGPT'
       end
       Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
