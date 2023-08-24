@@ -60,6 +60,9 @@ Full list of options available to specify in `_config.yml`:
   * `api_key_file` (optional) — the file with OpenAI API key. If this option is not specified,
     it is expected to have the key in the `OPENAI_API_KEY` environment variable.
 
+  * `api_key` (optional) — the OpenAI API key itself. This is a very bad idea to
+    specify it right in the `_config.yml` file, but it's still possible.
+
   * `model` (optional) — specifies the model to use by ChatGPT.
 
   * `source` (optional) — is the ISO-839-1 code of the source language.
