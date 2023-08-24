@@ -64,6 +64,8 @@ class GptTranslate::ChatGPT
         par
       elsif @key.empty?
         par
+      elsif par.start_with?('* ')
+        "* #{translate_par(par[2..])}"
       else
         translate_par(par)
       end

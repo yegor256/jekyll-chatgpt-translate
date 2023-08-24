@@ -106,8 +106,8 @@ class GptTranslate::Plain
       content
     end
 
-    def list_item(content, _type)
-      "#{content.strip}\n\n"
+    def list_item(content, type)
+      "#{type == :ordered ? '1.' : '*'} #{content.strip}\n\n"
     end
 
     def paragraph(text)

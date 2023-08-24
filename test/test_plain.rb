@@ -42,25 +42,25 @@ class GptTranslate::PlainTest < Minitest::Test
 
   def test_lists
     assert_equal(
-      "first\n\nsecond\n\nthird",
+      "* first\n\n* second\n\n* third",
       GptTranslate::Plain.new("* first\n\n* second\n\n* third").to_s
     )
     assert_equal(
-      'first',
+      '* first',
       GptTranslate::Plain.new("* first\n\n\n\n").to_s
     )
   end
 
   def test_ordered_list
     assert_equal(
-      "first\n\nsecond\n\nthird",
+      "1. first\n\n1. second\n\n1. third",
       GptTranslate::Plain.new("1. first\n\n2. second\n\n3. third").to_s
     )
   end
 
   def test_compact_list
     assert_equal(
-      "first\n\nsecond\n\nthird",
+      "* first\n\n* second\n\n* third",
       GptTranslate::Plain.new("* first\n* second\n* third").to_s
     )
   end
@@ -151,11 +151,11 @@ class GptTranslate::PlainTest < Minitest::Test
 
 In this *lovely* letter I will explain how objects work in C++:
 
-Declare a class
+* Declare a class
 
-Make an instance of it
+* Make an instance of it
 
-Delete the instance
+* Delete the instance
 
 ## More details
 

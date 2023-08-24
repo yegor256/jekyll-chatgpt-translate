@@ -63,7 +63,8 @@ Full list of options available to specify in `_config.yml`:
   * `api_key` (optional) — the OpenAI API key itself. This is a very bad idea to
     specify it right in the `_config.yml` file, but it's still possible.
 
-  * `model` (optional) — specifies the model to use by ChatGPT.
+  * `model` (optional) — specifies the model to use by ChatGPT, 
+    [examples are here](https://github.com/alexrudall/ruby-openai#models).
 
   * `source` (optional) — is the [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 
     code of the source language.
