@@ -62,6 +62,7 @@ class GptTranslate::Generator < Jekyll::Generator
     site.posts.docs.shuffle.each do |doc|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
+        start = Time.now
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
@@ -106,7 +107,8 @@ class GptTranslate::Generator < Jekyll::Generator
           )
           site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
           translated += 1
-          Jekyll.logger.info("Translated via ChatGPT: #{path} (#{File.size(path)} bytes)")
+          Jekyll.logger.info("Translated via ChatGPT \
+in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
         end
         doc.data["translated-#{lang}-url"] = link
         doc.data['chatgpt-model'] = model
