@@ -82,7 +82,8 @@ class GptTranslate::ChatGPT
     attempt = 0
     begin
       prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
-      response = OpenAI::Client.new(access_token: @key).chat(
+      client = OpenAI::Client.new(access_token: @key)
+      response = client.chat(
         parameters: {
           model: @model,
           messages: [{ role: 'user', content: prompt }],
@@ -90,7 +91,11 @@ class GptTranslate::ChatGPT
         }
       )
       answer = response.dig('choices', 0, 'message', 'content')
-      raise 'No content returned by ChatGPT' if answer.nil?
+      if answer.nil?
+        Jekyll.logger.error("No content returned by ChatGPT: #{response}")
+        Jekyll.logger.info("Available ChatGPT models: #{client.models.list}")
+        raise 'No content returned by ChatGPT'
+      end
       Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
     rescue StandardError => e
       attempt += 1
