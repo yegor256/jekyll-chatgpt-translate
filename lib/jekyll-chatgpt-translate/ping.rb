@@ -56,10 +56,10 @@ class GptTranslate::Ping
       before = Net::HTTP.get_response(URI(uri))
       if before.is_a?(Net::HTTPSuccess)
         html = before.body
+        @site.static_files << DownloadedFile.new(@site, @path, html)
         if html.include?(marker)
           Jekyll.logger.info("No need to translate, the page exists at \
 #{uri.inspect} (#{html.split.count} words)")
-          @site.static_files << DownloadedFile.new(@site, @path, html)
           return true
         end
         Jekyll.logger.info("Re-translation required for #{uri.inspect}")
