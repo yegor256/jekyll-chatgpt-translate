@@ -38,22 +38,19 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   end
 
   def test_start_with_link
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
-      .to_return(body: '{"choices":[{"message":{"content": "done!"}}]}')
+    stub_it!
     chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
     assert_equal('done!', chat.translate('[OpenAI](https://openai.com) is the creator of ChatGPT', min: 10))
   end
 
   def test_unordered_list_item
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
-      .to_return(body: '{"choices":[{"message":{"content": "done!"}}]}')
+    stub_it!
     chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
     assert_equal("* done!\n\n* done!", chat.translate("* First\n\n* Second", min: 1))
   end
 
   def test_ordered_list_item
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
-      .to_return(body: '{"choices":[{"message":{"content": "done!"}}]}')
+    stub_it!
     chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
     assert_equal("1. done!\n\n1. done!", chat.translate("1. First\n\n2. Second", min: 1))
   end
@@ -94,9 +91,15 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   end
 
   def test_through_webmock
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
-      .to_return(body: '{"choices":[{"message":{"content": "boom!"}}]}')
+    stub_it!
     chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
-    assert_equal('boom!', chat.translate('This is the text to send to OpenAI'))
+    assert_equal('done!', chat.translate('This is the text to send to OpenAI'))
+  end
+
+  private
+
+  def stub_it!
+    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
+      .to_return(body: '{"choices":[{"message":{"content": "done!"}}]}')
   end
 end
