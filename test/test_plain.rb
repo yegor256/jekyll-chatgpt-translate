@@ -40,6 +40,11 @@ class GptTranslate::PlainTest < Minitest::Test
     assert_equal('Hi, dude!', GptTranslate::Plain.new("  Hi,\ndude!\n").to_s)
   end
 
+  def test_strip_meta_markup
+    assert_equal('Hello, world!', GptTranslate::Plain.new("{:name='boom'}\nHello, world!").to_s)
+    assert_equal('Hello, world!', GptTranslate::Plain.new("Hello, world!\n{: .foo-class}").to_s)
+  end
+
   def test_lists
     assert_equal(
       "* first\n\n* second\n\n* third",

@@ -46,6 +46,8 @@ class GptTranslate::Plain
         .gsub(/<!--.+?-->/m, '')
         .gsub(/{{[^}]+}}/, '')
         .gsub(/{%.+?%}/, '')
+        .gsub(/^\{.+?\}\n/, '')
+        .gsub(/\n\{.+?\}$/, '')
     ).strip
   end
 
