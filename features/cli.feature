@@ -81,7 +81,7 @@ Feature: Simple site building
     """
     Then I build Jekyll site
     And Exit code is zero
-    And Stdout contains "No need to translate, the page exists"
+    And Stdout contains "Re-translation not required, since version is empty"
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/2023/01/01/hello.html" contains "see translated page: /about-me.html"
     And File "_site/about-me.html" exists

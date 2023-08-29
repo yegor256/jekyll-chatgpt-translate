@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'jekyll'
+require 'fileutils'
 require 'json'
 require_relative 'chatgpt'
 require_relative 'permalink'
@@ -83,12 +84,27 @@ class GptTranslate::Generator < Jekyll::Generator
             '---'
           ].join("\n")
         )
-        ping = GptTranslate::Ping.new(site, link)
-        if config['no_download'].nil? && ping.found?(version.empty? ? '' : marker)
-          copied += 1
-        elsif translated >= threshold
-          next
+        html = config['no_download'].nil? ? GptTranslate::Ping.new(site, link).download : nil
+        needed = false
+        if html.nil?
+          Jekyll.logger.info("The page is absent, need to translate #{link.inspect}")
+          needed = true
         else
+          copied += 1
+          site.static_files << DownloadedFile.new(site, link, html)
+          if version.empty?
+            Jekyll.logger.info("Re-translation not required, since version is empty: #{link.inspect}")
+          elsif html.include?(marker)
+            Jekyll.logger.info("No need to translate, the page exists at \
+#{link.inspect} (#{html.split.count} words)")
+          else
+            Jekyll.logger.info("Re-translation required for #{link.inspect}")
+            needed = true
+          end
+        end
+        if translated >= threshold
+          Jekyll.logger.info("We are over the threshold: #{translated} > #{threshold}")
+        elsif needed
           gpt = GptTranslate::ChatGPT.new(
             key,
             model,
@@ -107,7 +123,7 @@ class GptTranslate::Generator < Jekyll::Generator
             mode: 'a+'
           )
           site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
-          site.static_files.delete_if { |f| f.is_a?(GptTranslate::Ping::DownloadedFile) && f.link == link }
+          site.static_files.delete_if { |f| f.is_a?(DownloadedFile) && f.link == link }
           translated += 1
           Jekyll.logger.info("Translated via ChatGPT \
 in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
@@ -120,6 +136,24 @@ in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
     end
     Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION}: \
 #{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")
+  end
+
+  # The file we just downloaded.
+  class DownloadedFile < Jekyll::StaticFile
+    attr_reader :link
+
+    def initialize(site, link, html)
+      super(site, site.dest, '', link)
+      @html = html
+      @link = link
+    end
+
+    def write(_dest)
+      FileUtils.mkdir_p(File.dirname(path))
+      File.write(path, @html)
+      Jekyll.logger.info("Saved #{@html.split.count} words to #{path.inspect}")
+      true
+    end
   end
 
   private

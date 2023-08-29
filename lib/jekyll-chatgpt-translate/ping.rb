@@ -25,8 +25,6 @@
 require 'iri'
 require 'net/http'
 require 'uri'
-require 'jekyll'
-require 'fileutils'
 require_relative 'version'
 
 # see https://stackoverflow.com/a/6048451/187141
@@ -48,47 +46,20 @@ class GptTranslate::Ping
     @path = path
   end
 
-  def found?(marker)
+  # Downloads the page from the Internet and returns HTML or NIL, if the page is absent
+  def download
     home = @site.config['url']
-    return false if home.nil?
+    return nil if home.nil?
     uri = Iri.new(home).path(@path).to_s
+    html = nil
     begin
-      before = Net::HTTP.get_response(URI(uri))
-      if before.is_a?(Net::HTTPSuccess)
-        html = before.body
-        @site.static_files << DownloadedFile.new(@site, @path, html)
-        if html.include?(marker)
-          Jekyll.logger.info("No need to translate, the page exists at \
-#{uri.inspect} (#{html.split.count} words)")
-          return true
-        end
-        Jekyll.logger.info("Re-translation required for #{uri.inspect}")
-      else
-        Jekyll.logger.info("The page is absent, will translate #{uri.inspect} (#{before.code})")
-      end
-      Jekyll.logger.debug("GET #{uri.inspect}: #{before.code}")
+      response = Net::HTTP.get_response(URI(uri))
+      html = response.body if response.is_a?(Net::HTTPSuccess)
+      Jekyll.logger.debug("GET #{uri.inspect}: #{response.code}")
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL => e
       Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
       Jekyll.logger.info("The page is absent (#{e.class.name}): #{uri.inspect}")
     end
-    false
-  end
-
-  # The file we just downloaded.
-  class DownloadedFile < Jekyll::StaticFile
-    attr_reader :link
-
-    def initialize(site, link, html)
-      super(site, site.dest, '', link)
-      @html = html
-      @link = link
-    end
-
-    def write(_dest)
-      FileUtils.mkdir_p(File.dirname(path))
-      File.write(path, @html)
-      Jekyll.logger.info("Saved #{@html.split.count} words to #{path.inspect}")
-      true
-    end
+    html
   end
 end
