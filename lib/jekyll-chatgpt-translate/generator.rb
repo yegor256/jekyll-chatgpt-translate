@@ -44,7 +44,7 @@ class GptTranslate::Generator < Jekyll::Generator
   # Main plugin action, called by Jekyll-core
   def generate(site)
     config ||= site.config['chatgpt-translate'] || {}
-    home = '_chatgpt-translated'
+    home = config['tmpdir'] || '_chatgpt-translate'
     key = api_key(config)
     if key.nil?
       Jekyll.logger.info('jekyll-chatgpt-translate requires OPENAI_API_KEY environment variable')
@@ -76,9 +76,10 @@ class GptTranslate::Generator < Jekyll::Generator
             "title: #{doc['title'].to_json}",
             "description: #{doc['description'].to_json}",
             "permalink: #{link.to_json}",
-            "translated-original-url: #{doc.url.to_json}",
-            "translated-language: #{lang.to_json}",
-            "chatgpt-model: #{model.to_json}",
+            'chatgpt-translate:',
+            "  original-url: #{doc.url.to_json}",
+            "  language: #{lang.to_json}",
+            "  model: #{model.to_json}",
             '---'
           ].join("\n")
         )
@@ -111,8 +112,10 @@ class GptTranslate::Generator < Jekyll::Generator
           Jekyll.logger.info("Translated via ChatGPT \
 in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
         end
-        doc.data["translated-#{lang}-url"] = link
-        doc.data['chatgpt-model'] = model
+        doc.data['chatgpt-translate'] ||= {}
+        doc.data['chatgpt-translate']['model'] ||= model
+        doc.data['chatgpt-translate']['urls'] ||= {}
+        doc.data['chatgpt-translate']['urls'][lang] = link
       end
     end
     Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION}: \

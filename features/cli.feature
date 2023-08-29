@@ -22,19 +22,19 @@ Feature: Simple site building
     """
     And I have a "_layouts/default.html" file with content:
     """
-    The Chinese: {{ page.translated-zh-url }}
-    The French: {{ page.translated-fr-url }}
+    The Chinese: {{ page.chatgpt-translate.urls['zh'] }}
+    The French: {{ page.chatgpt-translate.urls['fr'] }}
     {{ content }}
     """
     And I have a "_layouts/chinese-translated.html" file with content:
     """
     Chinese: {{ content }}
-    The original: {{ page.translated-original-url }}
+    The original: {{ page.chatgpt-translate.original-url }}
     """
     And I have a "_layouts/translated.html" file with content:
     """
     French: {{ content }}
-    The original: {{ page.translated-original-url }}
+    The original: {{ page.chatgpt-translate.original-url }}
     """
     And I have a "_posts/2023-01-01-hello.md" file with content:
     """
@@ -46,9 +46,9 @@ Feature: Simple site building
     """
     Then I build Jekyll site
     And Exit code is zero
-    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" exists
-    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "/2023-01-01-hello-chinese.html"
-    And File "_chatgpt-translated/zh/2023-01-01-hello-zh.md" contains "translated-language: \"zh\""
+    And File "_chatgpt-translate/zh/2023-01-01-hello-zh.md" exists
+    And File "_chatgpt-translate/zh/2023-01-01-hello-zh.md" contains "/2023-01-01-hello-chinese.html"
+    And File "_chatgpt-translate/zh/2023-01-01-hello-zh.md" contains "language: \"zh\""
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/2023/01/01/hello.html" contains "The Chinese: /2023-01-01-hello-chinese.html"
     And File "_site/2023-01-01-hello-chinese.html" exists
@@ -77,7 +77,7 @@ Feature: Simple site building
     ---
     title: foo
     ---
-    see translated page: {{ page.translated-ru-url }}
+    see translated page: {{ page.chatgpt-translate.urls['ru'] }}
     """
     Then I build Jekyll site
     And Exit code is zero
