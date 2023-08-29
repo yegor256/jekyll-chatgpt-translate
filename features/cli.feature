@@ -69,7 +69,7 @@ Feature: Simple site building
       layout: should-not-be-used
       targets:
         -
-          language: en
+          language: ru
           permalink: about-me.html
     """
     And I have a "_posts/2023-01-01-hello.md" file with content:
@@ -77,12 +77,13 @@ Feature: Simple site building
     ---
     title: foo
     ---
-    foo
+    see translated page: {{ page.translated-ru-url }}
     """
     Then I build Jekyll site
     And Exit code is zero
     And Stdout contains "No need to translate, the page exists"
     And File "_site/2023/01/01/hello.html" exists
+    And File "_site/2023/01/01/hello.html" contains "see translated page: /about-me.html"
     And File "_site/about-me.html" exists
     And File "_site/about-me.html" contains "Yegor Bugayenko"
 
