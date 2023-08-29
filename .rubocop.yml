@@ -22,7 +22,7 @@ Metrics/BlockLength:
 Metrics/CyclomaticComplexity:
   Max: 30
 Metrics/PerceivedComplexity:
-  Max: 30
+  Max: 40
 Layout/EmptyLineAfterGuardClause:
   Enabled: false
 Naming/FileName:

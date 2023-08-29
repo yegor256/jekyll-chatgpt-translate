@@ -86,12 +86,14 @@ class GptTranslate::Generator < Jekyll::Generator
         )
         html = config['no_download'].nil? ? GptTranslate::Ping.new(site, link).download : nil
         needed = false
+        added = false
         if html.nil?
           Jekyll.logger.info("The page is absent, need to translate #{link.inspect}")
           needed = true
         else
           copied += 1
           site.static_files << DownloadedFile.new(site, link, html)
+          added = true
           if version.empty?
             Jekyll.logger.info("Re-translation not required, since version is empty: #{link.inspect}")
           elsif html.include?(marker)
@@ -124,10 +126,12 @@ class GptTranslate::Generator < Jekyll::Generator
           )
           site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
           site.static_files.delete_if { |f| f.is_a?(DownloadedFile) && f.link == link }
+          added = true
           translated += 1
           Jekyll.logger.info("Translated via ChatGPT \
 in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
         end
+        next unless added
         doc.data['chatgpt-translate'] ||= {}
         doc.data['chatgpt-translate']['model'] ||= model
         doc.data['chatgpt-translate']['urls'] ||= {}
