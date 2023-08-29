@@ -75,6 +75,14 @@ class GptTranslate::PlainTest < Minitest::Test
       'Hello, [dude](/a.html)!',
       GptTranslate::Plain.new('Hello, [dude](/a.html)!').to_s
     )
+    assert_equal(
+      'Hello, dude!',
+      GptTranslate::Plain.new('Hello, [dude]()!').to_s
+    )
+    assert_equal(
+      'Hello, dude!',
+      GptTranslate::Plain.new('Hello, [dude]({% post_url 2023-01-01-hello %})!').to_s
+    )
   end
 
   def test_code

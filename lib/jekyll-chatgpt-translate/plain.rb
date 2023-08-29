@@ -121,7 +121,11 @@ class GptTranslate::Plain
     end
 
     def link(link, _title, content)
-      "[#{content}](#{link})"
+      if !link.nil? && link.start_with?('/', 'https://', 'http://')
+        "[#{content}](#{link})"
+      else
+        content
+      end
     end
   end
 end
