@@ -126,3 +126,45 @@ Feature: Simple site building
     And File "_site/about-me.html" exists
     And File "_site/about-me.html" contains "foo-file-foo"
     And File "_site/boom.html" exists
+
+  Scenario: Simple translation with links to other pages
+    Given I have a "_config.yml" file with content:
+    """
+    url: https://www.yegor256.com
+    markdown: kramdown
+    plugins:
+      - jekyll-chatgpt-translate
+    chatgpt-translate:
+      source: en
+      api_key: "it-is-not-used, because EN to EN translation"
+      layout: default
+      targets:
+        -
+          language: en
+          permalink: :slug.html
+    """
+    And I have a "_layouts/default.html" file with content:
+    """
+    {{ content }}
+    """
+    And I have a "_posts/2023-01-01-hello.md" file with content:
+    """
+    ---
+    title: foo
+    ---
+    See {% post_url 2023-02-02-bye %}
+    """
+    And I have a "_posts/2023-02-02-bye.md" file with content:
+    """
+    ---
+    title: foo
+    ---
+    See {% post_url 2023-01-01-hello %}
+    """
+    Then I build Jekyll site
+    And Exit code is zero
+    And Stdout contains "The page is absent, need to translate"
+    And File "_site/2023/01/01/hello.html" exists
+    And File "_site/2023/01/01/hello.html" contains "/bye.html"
+    And File "_site/2023/02/02/bye.html" exists
+    And File "_site/2023/02/02/bye.html" contains "/hello.html"
