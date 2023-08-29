@@ -60,7 +60,7 @@ class GptTranslate::Generator < Jekyll::Generator
     copied = 0
     model = config['model'] || 'gpt-3.5-turbo'
     marker = "Translated by ChatGPT #{model}#{version.empty? ? '' : "/#{version}"}"
-    site.posts.docs.shuffle.each do |doc|
+    site.posts.docs.shuffle.each_with_index do |doc, pos|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
         start = Time.now
@@ -103,7 +103,7 @@ class GptTranslate::Generator < Jekyll::Generator
           end
         end
         if translated >= threshold
-          Jekyll.logger.info("We are over the threshold: #{translated} > #{threshold}")
+          Jekyll.logger.info("Page ##{pos} is ignored, we are over the threshold of #{threshold}: #{link}")
         elsif needed
           gpt = GptTranslate::ChatGPT.new(
             key,
