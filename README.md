@@ -50,7 +50,7 @@ to get the URL of the page that was translated.
 
 You can also use `{{ page.chatgpt-translate.model }}`
 inside both the original page and the translated one, to refer to the model of ChatGPT.
-The presence of this attribute in the `{{ page }}` means that the
+The presence of `{{ page.chatgpt-translate }}` means that the
 page was translated or the translated HTML was downloaded and placed into the `_site` directory.
 
 ## Options
