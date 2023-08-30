@@ -54,6 +54,10 @@ class GptTranslate::Prompt
       to[3],
       ', don\'t translate technical terms and proper nouns'
     ].join
-    "#{head}:\n\n#{@par}"
+    if @par.include?('"') || @par.split.count >= 8
+      "#{head}:\n\n#{@par}"
+    else
+      "#{head}: \"#{@par}\""
+    end
   end
 end
