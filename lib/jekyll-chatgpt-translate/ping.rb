@@ -57,8 +57,7 @@ class GptTranslate::Ping
       html = response.body if response.is_a?(Net::HTTPSuccess)
       Jekyll.logger.debug("GET #{uri.inspect}: #{response.code}")
     rescue Errno::ECONNREFUSED, Errno::EADDRNOTAVAIL => e
-      Jekyll.logger.debug("Failed to ping #{uri.inspect}: #{e.message}")
-      Jekyll.logger.info("The page is absent (#{e.class.name}): #{uri.inspect}")
+      Jekyll.logger.debug("Failed to ping #{uri.inspect} (#{e.class.name}): #{e.message}")
     end
     html
   end
