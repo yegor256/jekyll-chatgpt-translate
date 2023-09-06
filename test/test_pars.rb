@@ -37,6 +37,10 @@ class GptTranslate::ParsTest < Minitest::Test
     assert_equal(2, GptTranslate::Pars.new("\n\n\nHello,\n\n**world**\n!\n\n").to_a.size)
   end
 
+  def test_returns_unfrozen_strings
+    GptTranslate::Pars.new("Hi, world!\n\n```\ntest\n```\n\nBye\n").to_a.map(&:strip!)
+  end
+
   def test_understands_code_block
     pars = GptTranslate::Pars.new("Hello:\n\n```java\na\n\nb\n\nc\n```\n\nz").to_a
     assert_equal(3, pars.size)

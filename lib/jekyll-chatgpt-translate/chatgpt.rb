@@ -52,7 +52,8 @@ class GptTranslate::ChatGPT
   end
 
   def translate(markdown, min: 32)
-    GptTranslate::Pars.new(markdown).to_a.map do |par|
+    GptTranslate::Pars.new(markdown).to_a.map do |pa|
+      par = pa.dup
       par.strip!
       if @source == @target
         Jekyll.logger.debug("No need to translate from #{@source.inspect} to #{@target.inspect}: #{par.inspect}")
