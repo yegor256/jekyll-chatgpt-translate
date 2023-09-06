@@ -42,7 +42,7 @@ class GptTranslate::Plain
   def to_s
     Redcarpet::Markdown.new(Strip).render(
       @markdown
-        .gsub(/([^\n])\n(\s*\* )/, "\\1\n\n\\2")
+        .gsub(/([^\n])\n(\s*\* )/, "\\1\n\n\\2") # condensed list into item-per-par
         .gsub(/<!--.+?-->/m, '')
         .gsub(/{{[^}]+}}/, '')
         .gsub(/{%.+?%}/, '')

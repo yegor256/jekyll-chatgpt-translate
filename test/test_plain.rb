@@ -111,6 +111,13 @@ class GptTranslate::PlainTest < Minitest::Test
     )
   end
 
+  def test_code_block_with_empty_lines_inside
+    assert_equal(
+      "```\n\nhello\n\nworld!\n\n```",
+      GptTranslate::Plain.new("```\n\nhello\n\n\n\nworld!\n\n```").to_s
+    )
+  end
+
   def test_titles
     assert_equal('# Hello', GptTranslate::Plain.new('# Hello').to_s)
     assert_equal('## Hello', GptTranslate::Plain.new('## Hello').to_s)
