@@ -25,6 +25,7 @@
 require 'jekyll'
 require 'openai'
 require 'iso-639'
+require_relative 'pars'
 require_relative 'prompt'
 
 # The module we are in.
@@ -51,7 +52,7 @@ class GptTranslate::ChatGPT
   end
 
   def translate(markdown, min: 32)
-    markdown.split(/\n{2,}/).compact.map do |par|
+    GptTranslate::Pars.new(markdown).to_a.map do |par|
       par.strip!
       if @source == @target
         Jekyll.logger.debug("No need to translate from #{@source.inspect} to #{@target.inspect}: #{par.inspect}")
@@ -59,7 +60,7 @@ class GptTranslate::ChatGPT
       elsif par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
         par
-      elsif par.start_with?('```') || par.end_with?('```')
+      elsif par.start_with?('```')
         Jekyll.logger.debug("Not translating this code block: #{par.inspect}")
         par
       elsif par =~ /^[^\p{Alnum}\*'"\[]/
