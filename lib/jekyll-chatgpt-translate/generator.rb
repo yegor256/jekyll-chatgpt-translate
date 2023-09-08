@@ -63,7 +63,7 @@ class GptTranslate::Generator < Jekyll::Generator
     site.posts.docs.shuffle.each_with_index do |doc, pos|
       plain = GptTranslate::Plain.new(doc.content).to_s
       config['targets'].each do |target|
-        start = Time.now
+        pstart = Time.now
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
@@ -129,7 +129,7 @@ class GptTranslate::Generator < Jekyll::Generator
           added = true
           translated += 1
           Jekyll.logger.info("Translated via ChatGPT \
-in #{(Time.now - start).round(2)}s: #{path} (#{File.size(path)} bytes)")
+in #{(Time.now - pstart).round(2)}s: #{path} (#{File.size(path)} bytes)")
         end
         next unless added
         doc.data['chatgpt-translate'] ||= {}
