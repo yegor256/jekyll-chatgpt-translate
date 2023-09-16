@@ -55,7 +55,6 @@ class GptTranslate::Plain
   # Motivated by https://github.com/vmg/redcarpet/blob/master/lib/redcarpet/render_strip.rb
   class Strip < Redcarpet::Render::Base
     %i[
-      block_quote
       block_html
       autolink
       underline
@@ -76,6 +75,10 @@ class GptTranslate::Plain
 
     def block_code(code, _lang)
       code
+    end
+
+    def block_quote(txt)
+      "> #{txt}"
     end
 
     def emphasis(txt)

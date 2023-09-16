@@ -64,15 +64,17 @@ class GptTranslate::ChatGPT
       elsif par.start_with?('```')
         Jekyll.logger.debug("Not translating this code block: #{par.inspect}")
         par
-      elsif par =~ /^[^\p{Alnum}\*'"\[]/
-        Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
-        par
       elsif @key.empty?
         par
+      elsif par.start_with?('> ')
+        "> #{translate_par(par[2..])}"
       elsif par.start_with?('* ')
         "* #{translate_par(par[2..])}"
       elsif par =~ /^[0-9]+\. /
         "1. #{translate_par(par.split('.', 2)[1])}"
+      elsif par =~ /^[^\p{Alnum}\*'"\[]/
+        Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
+        par
       else
         translate_par(par)
       end

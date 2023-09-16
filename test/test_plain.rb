@@ -85,6 +85,13 @@ class GptTranslate::PlainTest < Minitest::Test
     )
   end
 
+  def test_quote
+    assert_equal(
+      "He said this:\n\n> Life is great!",
+      GptTranslate::Plain.new("He said this:\n\n\n> Life is great!\n\n").to_s
+    )
+  end
+
   def test_code
     assert_equal(
       'Hello, `Java`!',
