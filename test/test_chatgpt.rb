@@ -64,9 +64,9 @@ class GptTranslate::ChatGPTTest < Minitest::Test
     chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'xx')
     chat.translate(
       "
-      How are you, my friend?
+      How are you, my friend? This text must be translated through ChatGPT.
 
-      Read this Java code:
+      Read this Java code (this paragraph must also be translated through ChatGPT):
 
       ```
       System.out.println(\"Hello, dude!\");

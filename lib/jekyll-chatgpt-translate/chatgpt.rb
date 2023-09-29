@@ -79,13 +79,27 @@ class GptTranslate::ChatGPT
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
         ready[i] = par
       else
-        later[i] = translate_par(par)
+        later[i] = par
       end
     end
+    accum = []
+    (0..pars.length).each do |i|
+      if !ready[i].nil? && !accum.empty? && later[i].nil?
+        ready[i - 1] = translate_pars(accum)
+        accum = []
+        next
+      end
+      accum << later[i] unless later[i].nil?
+    end
+    ready[pars.length - 1] = translate_pars(accum) unless accum.empty?
     ready.join("\n\n")
   end
 
   private
+
+  def translate_pars(accum)
+    translate_par(accum.join("\n\n"))
+  end
 
   def translate_par(par)
     client = OpenAI::Client.new(access_token: @key)

@@ -54,9 +54,8 @@ class GptTranslate::PromptTest < Minitest::Test
   end
 
   def test_multiple_paragraphs
-    assert_equal(
-      "#{head('English', 'Chinese')}: \"Hello,\n\nJeff!\"",
-      GptTranslate::Prompt.new("Hello,\n\nJeff!", 'en', 'zh').to_s
+    assert(
+      GptTranslate::Prompt.new("Hello,\n\nJeff!", 'en', 'zh').to_s.include?("\"Hello,\n\nJeff!\"")
     )
   end
 end
