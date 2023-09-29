@@ -55,7 +55,6 @@ class GptTranslate::Plain
   # Motivated by https://github.com/vmg/redcarpet/blob/master/lib/redcarpet/render_strip.rb
   class Strip < Redcarpet::Render::Base
     %i[
-      block_html
       autolink
       underline
       triple_emphasis
@@ -101,6 +100,10 @@ class GptTranslate::Plain
 
     def image(link, title, alt)
       "![#{alt}](#{link} \"#{title}\")"
+    end
+
+    def block_html(html)
+      "#{html}\n"
     end
 
     def raw_html(html)

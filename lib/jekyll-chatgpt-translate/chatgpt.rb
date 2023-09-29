@@ -52,33 +52,37 @@ class GptTranslate::ChatGPT
   end
 
   def translate(markdown, min: 32)
-    GptTranslate::Pars.new(markdown).to_a.map do |pa|
+    pars = GptTranslate::Pars.new(markdown).to_a
+    ready = []
+    later = []
+    pars.each_with_index do |pa, i|
       par = pa.dup
       par.strip!
       if @source == @target
         Jekyll.logger.debug("No need to translate from #{@source.inspect} to #{@target.inspect}: #{par.inspect}")
-        par
+        ready[i] = par
       elsif par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")
-        par
+        ready[i] = par
       elsif par.start_with?('```')
         Jekyll.logger.debug("Not translating this code block: #{par.inspect}")
-        par
+        ready[i] = par
       elsif @key.empty?
-        par
+        ready[i] = par
       elsif par.start_with?('> ')
-        "> #{translate_par(par[2..])}"
+        ready[i] = "> #{translate_par(par[2..])}"
       elsif par.start_with?('* ')
-        "* #{translate_par(par[2..])}"
+        ready[i] = "* #{translate_par(par[2..])}"
       elsif par =~ /^[0-9]+\. /
-        "1. #{translate_par(par.split('.', 2)[1])}"
+        ready[i] = "1. #{translate_par(par.split('.', 2)[1])}"
       elsif par =~ /^[^\p{Alnum}\*'"\[]/
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
-        par
+        ready[i] = par
       else
-        translate_par(par)
+        later[i] = translate_par(par)
       end
-    end.join("\n\n")
+    end
+    ready.join("\n\n")
   end
 
   private

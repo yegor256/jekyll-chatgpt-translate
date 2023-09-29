@@ -143,6 +143,11 @@ class GptTranslate::PlainTest < Minitest::Test
     assert_equal('<img src="a"/>', GptTranslate::Plain.new('<img src="a"/>').to_s)
   end
 
+  def test_html_hr
+    md = "First\n\n<hr/>\n\nsecond!"
+    assert_equal(md, GptTranslate::Plain.new(md).to_s)
+  end
+
   def test_liquid_tags
     assert_equal(
       'Hello, !',

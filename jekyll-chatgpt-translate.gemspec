@@ -47,5 +47,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'jekyll', '>= 3'
   s.add_runtime_dependency 'redcarpet', '>= 3'
   s.add_runtime_dependency 'ruby-openai', '>= 5'
+  s.add_runtime_dependency 'humanize', '>= 2'
   s.metadata['rubygems_mfa_required'] = 'true'
 end

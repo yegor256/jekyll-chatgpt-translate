@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'iso-639'
+require 'humanize'
 
 # The module we are in.
 module GptTranslate; end
@@ -47,8 +48,11 @@ class GptTranslate::Prompt
     raise "Unknown source language ISO-639 code: #{@source.inspect}" if from.nil?
     to = ISO_639.find_by_code(@target)
     raise "Unknown source language ISO-639 code: #{@target.inspect}" if to.nil?
+    md = @par
+    parts = md.split("\n\n")
+    label = parts.size > 1 ? "#{parts.size.humanize(locale: :en)} Markdown paragraphs" : 'Markdown paragraph'
     head = [
-      'Please, translate the following Markdown paragraph from ',
+      "Please, translate the following #{label} from ",
       from[3],
       ' to ',
       to[3],
