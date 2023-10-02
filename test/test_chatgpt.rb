@@ -76,7 +76,8 @@ class GptTranslate::ChatGPTTest < Minitest::Test
 
       This is it.
       ",
-      min: 40
+      min: 40,
+      window_length: 10
     )
   end
 

@@ -51,7 +51,7 @@ class GptTranslate::ChatGPT
     @target = target
   end
 
-  def translate(markdown, min: 32)
+  def translate(markdown, min: 32, window_length: 2000)
     pars = GptTranslate::Pars.new(markdown).to_a
     ready = []
     later = []
@@ -82,17 +82,23 @@ class GptTranslate::ChatGPT
         later[i] = par
       end
     end
-    accum = []
-    (0..pars.length).each do |i|
-      if !ready[i].nil? && !accum.empty? && later[i].nil?
-        ready[i - 1] = translate_pars(accum)
-        accum = []
+    out = []
+    i = 0
+    while i < pars.length
+      unless ready[i].nil?
+        out << ready[i]
+        i += 1
         next
       end
-      accum << later[i] unless later[i].nil?
+      accum = []
+      until later[i].nil?
+        accum << later[i]
+        break if accum.join.split.count > window_length
+        i += 1
+      end
+      out << translate_pars(accum)
     end
-    ready[pars.length - 1] = translate_pars(accum) unless accum.empty?
-    ready.join("\n\n")
+    out.join("\n\n")
   end
 
   private
