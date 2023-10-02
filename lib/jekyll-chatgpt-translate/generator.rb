@@ -113,7 +113,7 @@ class GptTranslate::Generator < Jekyll::Generator
             config['source'] || 'en',
             lang
           )
-          foreign = gpt.translate(plain, min: min_chars)
+          foreign = gpt.translate(plain, min: min_chars, window_length: config['window_length'] || '2048')
           File.write(
             path,
             [
