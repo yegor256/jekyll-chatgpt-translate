@@ -92,8 +92,12 @@ class GptTranslate::ChatGPT
       end
       accum = []
       until later[i].nil?
+        already = accum.join.split.count
+        if already > window_length
+          Jekyll.logger.debug("Already #{already} words, over the window_length of #{window_length}")
+          break
+        end
         accum << later[i]
-        break if accum.join.split.count > window_length
         i += 1
       end
       out << translate_pars(accum)

@@ -104,7 +104,7 @@ class GptTranslate::ChatGPTTest < Minitest::Test
       "done!\n\ndone!",
       chat.translate(
         "This is the first paragraph\n\nThis is second\n\nThis is third",
-        min: 1, window_length: 5
+        min: 1, window_length: 4
       )
     )
   end
