@@ -97,6 +97,18 @@ class GptTranslate::ChatGPTTest < Minitest::Test
     assert_equal('done!', chat.translate('This is the text to send to OpenAI'))
   end
 
+  def test_through_small_window
+    stub_it!
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru')
+    assert_equal(
+      "done!\n\ndone!",
+      chat.translate(
+        "This is the first paragraph\n\nThis is second\n\nThis is third",
+        min: 1, window_length: 5
+      )
+    )
+  end
+
   private
 
   def stub_it!

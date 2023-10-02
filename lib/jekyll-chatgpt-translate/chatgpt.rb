@@ -97,6 +97,7 @@ class GptTranslate::ChatGPT
         i += 1
       end
       out << translate_pars(accum)
+      i += 1
     end
     out.join("\n\n")
   end
