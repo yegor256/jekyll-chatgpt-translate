@@ -25,6 +25,7 @@
 require 'jekyll'
 require 'openai'
 require 'iso-639'
+require 'tiktoken_ruby'
 require_relative 'pars'
 require_relative 'prompt'
 
@@ -92,7 +93,7 @@ class GptTranslate::ChatGPT
       end
       accum = []
       until later[i].nil?
-        already = accum.join.split.count
+        already = Tiktoken.encoding_for_model('gpt-4').encode(accum.join).length
         if already > window_length
           Jekyll.logger.debug("Already #{already} words, over the window_length of #{window_length}")
           break

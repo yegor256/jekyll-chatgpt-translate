@@ -48,5 +48,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'jekyll', '>= 3'
   s.add_runtime_dependency 'redcarpet', '>= 3'
   s.add_runtime_dependency 'ruby-openai', '>= 5'
+  s.add_runtime_dependency 'tiktoken_ruby', '>= 0.0.6'
   s.metadata['rubygems_mfa_required'] = 'true'
 end
