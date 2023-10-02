@@ -44,6 +44,7 @@ class GptTranslate::Generator < Jekyll::Generator
 
   # Main plugin action, called by Jekyll-core
   def generate(site)
+    Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} starting...")
     config ||= site.config['chatgpt-translate'] || {}
     home = config['tmpdir'] || '_chatgpt-translate'
     key = api_key(config)
