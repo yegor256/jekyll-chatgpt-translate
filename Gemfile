@@ -29,7 +29,7 @@ gem 'cucumber', '9.0.2', require: false
 gem 'kramdown-parser-gfm', '1.1.0', require: false
 gem 'minitest', '5.19.0', require: false
 gem 'rake', '13.0.6', require: false
-gem 'rubocop', '1.56.4', require: false
+gem 'rubocop', '1.57.2', require: false
 gem 'rubocop-rspec', '2.24.0', require: false
 gem 'simplecov', '0.22.0', require: false
 gem 'webmock', '3.19.1', require: false
