@@ -26,7 +26,7 @@ require 'English'
 
 Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
-  s.required_ruby_version = '>= 2.6'
+  s.required_ruby_version = '>= 3.0'
   s.name = 'jekyll-chatgpt-translate'
   s.version = '0.0.0'
   s.license = 'MIT'
@@ -46,6 +46,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'iri', '>= 0'
   s.add_runtime_dependency 'iso-639', '>= 0'
   s.add_runtime_dependency 'jekyll', '>= 3'
+  s.add_runtime_dependency 'json', '>= 2'
   s.add_runtime_dependency 'redcarpet', '>= 3'
   s.add_runtime_dependency 'ruby-openai', '>= 5'
   s.add_runtime_dependency 'tiktoken_ruby', '>= 0.0.6'

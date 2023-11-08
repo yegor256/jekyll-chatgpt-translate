@@ -23,6 +23,7 @@
 # SOFTWARE.
 
 require 'jekyll'
+require 'json'
 require 'openai'
 require 'iso-639'
 require 'tiktoken_ruby'
@@ -131,7 +132,7 @@ class GptTranslate::ChatGPT
           temperature: 0.7
         }
       )
-      answer = response.dig('choices', 0, 'message', 'content')
+      answer = JSON.parse(response).dig('choices', 0, 'message', 'content')
       if answer.nil?
         Jekyll.logger.error("No content returned by ChatGPT: #{response}")
         raise 'No content returned by ChatGPT'
