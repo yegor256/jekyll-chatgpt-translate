@@ -45,12 +45,13 @@ class GptTranslate::ChatGPT
   # +key+ OpenAI API Key, which can't be nil, but can be empty string, which means dry mode (no calls to OpenAI)
   # +source+ The language to translate from
   # +target+ The language to translate into
-  def initialize(key, model, source, target)
+  def initialize(key, model, source, target, client: OpenAI::Client.new(access_token: key))
     raise 'OpenAI key cannot be nil' if key.nil?
     @key = key
     @model = model
     @source = source
     @target = target
+    @client = client
   end
 
   def translate(markdown, min: 32, window_length: 2000)
@@ -115,9 +116,8 @@ class GptTranslate::ChatGPT
   end
 
   def translate_par(par)
-    client = OpenAI::Client.new(access_token: @key)
     if @@models_printed
-      Jekyll.logger.info("Available ChatGPT models: #{client.models.list['data'].map { |m| m['id'] }.join(', ')}")
+      Jekyll.logger.info("Available ChatGPT models: #{@client.models.list['data'].map { |m| m['id'] }.join(', ')}")
       @@models_printed = true
     end
     prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
@@ -125,14 +125,15 @@ class GptTranslate::ChatGPT
     answer = nil
     attempt = 0
     begin
-      response = client.chat(
+      response = @client.chat(
         parameters: {
           model: @model,
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.7
         }
       )
-      answer = JSON.parse(response).dig('choices', 0, 'message', 'content')
+      json = response.is_a?(Hash) ? response : JSON.parse(response)
+      answer = json.dig('choices', 0, 'message', 'content')
       if answer.nil?
         Jekyll.logger.error("No content returned by ChatGPT: #{response}")
         raise 'No content returned by ChatGPT'

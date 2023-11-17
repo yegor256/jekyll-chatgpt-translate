@@ -109,10 +109,26 @@ class GptTranslate::ChatGPTTest < Minitest::Test
     )
   end
 
+  def test_with_json
+    client = Object.new
+    def client.chat(*)
+      { 'choices' => [{ 'message' => { 'content' => 'done!' } }] }
+    end
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru', client: client)
+    assert_equal(
+      "done!\n\ndone!",
+      chat.translate(
+        "This is the first paragraph\n\nThis is second\n\nThis is third",
+        min: 1, window_length: 4
+      )
+    )
+  end
+
   private
 
   def stub_it!
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions')
-      .to_return(body: '{"choices":[{"message":{"content": "done!"}}]}')
+    stub_request(:any, 'https://api.openai.com/v1/chat/completions').to_return(
+      body: '{"choices":[{"message":{"content": "done!"}}]}'
+    )
   end
 end
