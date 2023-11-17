@@ -4,7 +4,7 @@ assets:
   rubygems.yml: yegor256/home#assets/rubygems.yml
 install: |
   pdd -f /dev/null
-  bundle install --no-color "--gemfile=$(pwd)/Gemfile"
+  bundle install --no-color
 release:
   script: |-
     bundle exec rake
