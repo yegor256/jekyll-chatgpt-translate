@@ -66,6 +66,7 @@ Feature: Simple site building
       source: en
       version: ""
       api_key: "it-is-not-used, because EN to EN translation"
+      window_length: 1024
       layout: should-not-be-used
       targets:
         -
