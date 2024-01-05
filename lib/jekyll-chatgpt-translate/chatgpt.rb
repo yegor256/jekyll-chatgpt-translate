@@ -62,7 +62,7 @@ class GptTranslate::ChatGPT
       par = pa.dup
       par.strip!
       if @source == @target
-        Jekyll.logger.debug("No need to translate from #{@source.inspect} to #{@target.inspect}: #{par.inspect}")
+        Jekyll.logger.debug("No need to translate from #{@source.inspect} to itself: #{par.inspect}")
         ready[i] = par
       elsif par.length < min
         Jekyll.logger.debug("Not translating this, b/c too short: #{par.inspect}")

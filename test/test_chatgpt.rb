@@ -33,7 +33,7 @@ require_relative '../lib/jekyll-chatgpt-translate/chatgpt'
 # License:: MIT
 class GptTranslate::ChatGPTTest < Minitest::Test
   def test_short_text
-    chat = GptTranslate::ChatGPT.new('fake-key', 'foo', 'xx', 'xx')
+    chat = GptTranslate::ChatGPT.new('fake-key', 'foo', 'xx', 'zz')
     assert_equal('Hello, world!', chat.translate('Hello, world!'))
   end
 
@@ -56,12 +56,12 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   end
 
   def test_dry_mode
-    chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'xx')
+    chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'zz')
     assert_equal(38, chat.translate('This text should not be sent to OpenAI', min: 100).length)
   end
 
   def test_no_translation
-    chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'xx')
+    chat = GptTranslate::ChatGPT.new('', 'foo', 'xx', 'zz')
     chat.translate(
       "
       How are you, my friend? This text must be translated through ChatGPT.
@@ -82,12 +82,17 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   end
 
   def test_markup
-    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'xx', 'xx')
-    assert_equal('<img src="a"/>', chat.translate('<img src="a"/>'))
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'xx', 'zz')
+    assert_equal('<img src="a"/>', chat.translate('<img src="a"/>', min: 1))
+  end
+
+  def test_image
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'xx', 'zz')
+    assert_equal('![some image](/foo.png)', chat.translate('![some image](/foo.png)', min: 1))
   end
 
   def test_code_block
-    chat = GptTranslate::ChatGPT.new('fake-key', '', 'xx', 'xx')
+    chat = GptTranslate::ChatGPT.new('fake-key', '', 'xx', 'zz')
     chat.translate("```\ntest\n```", min: 0)
   end
 
