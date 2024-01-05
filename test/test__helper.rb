@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Copyright (c) 2023 Yegor Bugayenko
+# Copyright (c) 2023-2024 Yegor Bugayenko
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the 'Software'), to deal
@@ -33,7 +33,7 @@ module GptTranslate; end
 
 # Fake.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
-# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# Copyright:: Copyright (c) 2023-2024 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::FakeSite
   attr_reader :config, :pages, :static_files
@@ -81,7 +81,7 @@ end
 
 # Fake.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
-# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# Copyright:: Copyright (c) 2023-2024 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::FakeDocument
   attr_reader :data
@@ -118,7 +118,7 @@ end
 
 # Fake.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
-# Copyright:: Copyright (c) 2023 Yegor Bugayenko
+# Copyright:: Copyright (c) 2023-2024 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::FakePosts
   attr_reader :config
