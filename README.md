@@ -36,8 +36,9 @@ chatgpt-translate:
       permalink: :year-:month-:day-:title-french.html
 ```
 
-Here, the source language is English (`en`), the target one is Chinese (`zh`),
-the layout is `_layout/translated.html` (you must have this file).
+Here, the source language is English (`en`), the targets are Chinese (`zh`) and French (`fr`),
+where the layout for Chinese is `_layout/chinese-translated.html` and for
+French is `_layout/translated.html` (you must have these files).
 
 OpenAI API KEY must be set in `OPENAI_API_KEY` environment variable, otherwise
 the plugin will not do any translation and won't generate translated pages. 
