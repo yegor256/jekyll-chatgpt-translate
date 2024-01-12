@@ -40,7 +40,7 @@ Here, the source language is English (`en`), the targets are Chinese (`zh`) and 
 where the layout for Chinese is `_layout/chinese-translated.html` and for
 French is `_layout/translated.html` (you must have these files).
 
-OpenAI API KEY must be set in `OPENAI_API_KEY` environment variable, otherwise
+OpenAI API KEY must be set in the `OPENAI_API_KEY` environment variable, otherwise
 the plugin will not do any translation and won't generate translated pages. 
 You can get your key [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
 
