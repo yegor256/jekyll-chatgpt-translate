@@ -44,7 +44,8 @@ OpenAI API KEY must be set in the `OPENAI_API_KEY` environment variable, otherwi
 the plugin will not do any translation and won't generate translated pages. 
 You can get your key [here](https://help.openai.com/en/articles/4936850-where-do-i-find-my-secret-api-key).
 
-OpenAI API BASE (optional) — the base URL for the OpenAI API. Can be customized in "OPENAI_API_BASE" environment variable. If this variable is not set, the default value is "https://api.openai.com/". 
+OpenAI API base URL can be customized by the `OPENAI_API_BASE` environment variable. 
+If this variable is not set, the default value is `https://api.openai.com/`. 
 
 Inside the original page you can use `{{ page.chatgpt-translate.urls[XX] }}` in order to render the URL
 of the translated page, where `XX` is the [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) 
