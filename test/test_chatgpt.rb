@@ -132,8 +132,21 @@ class GptTranslate::ChatGPTTest < Minitest::Test
   private
 
   def stub_it!
-    stub_request(:any, 'https://api.openai.com/v1/chat/completions').to_return(
+    url = "#{api_base_url}v1/chat/completions"
+    stub_request(:any, url).to_return(
       body: '{"choices":[{"message":{"content": "done!"}}]}'
     )
+  end
+
+  def api_base_url
+    url = ENV.fetch('OPENAI_API_BASE', 'https://api.openai.com/')
+    Jekyll.logger.info("Current OpenAI API Base URL: #{url.inspect}")
+
+    warning_msg = 'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
+                  'The provider of this endpoint may have access to all details ' \
+                  'of your requests. Only use a custom endpoint if you trust the provider.'
+    Jekyll.logger.warn(warning_msg) if url != 'https://api.openai.com/'
+
+    url
   end
 end
