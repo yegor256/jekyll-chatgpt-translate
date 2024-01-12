@@ -45,13 +45,25 @@ class GptTranslate::ChatGPT
   # +key+ OpenAI API Key, which can't be nil, but can be empty string, which means dry mode (no calls to OpenAI)
   # +source+ The language to translate from
   # +target+ The language to translate into
-  def initialize(key, model, source, target, client: OpenAI::Client.new(access_token: key))
+  def initialize(key, model, source, target, client: OpenAI::Client.new(access_token: key, uri_base: api_base_url))
     raise 'OpenAI key cannot be nil' if key.nil?
     @key = key
     @model = model
     @source = source
     @target = target
     @client = client
+  end
+
+  def api_base_url
+    url = ENV.fetch('OPENAI_API_BASE', 'https://api.openai.com/')
+    Jekyll.logger.info("Current OpenAI API Base URL: #{url.inspect}")
+
+    warning_msg = 'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
+                  'The provider of this endpoint may have access to all details ' \
+                  'of your requests. Only use a custom endpoint if you trust the provider.'
+    Jekyll.logger.warn(warning_msg) if url != 'https://api.openai.com/'
+
+    url
   end
 
   def translate(markdown, min: 32, window_length: 2000)
