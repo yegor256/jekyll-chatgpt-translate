@@ -30,6 +30,6 @@ gem 'kramdown-parser-gfm', '1.1.0', require: false
 gem 'minitest', '5.22.3', require: false
 gem 'rake', '13.2.0', require: false
 gem 'rubocop', '1.62.0', require: false
-gem 'rubocop-rspec', '2.27.1', require: false
+gem 'rubocop-rspec', '2.29.1', require: false
 gem 'simplecov', '0.22.0', require: false
 gem 'webmock', '3.23.0', require: false
