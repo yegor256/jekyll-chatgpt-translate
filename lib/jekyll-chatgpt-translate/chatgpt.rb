@@ -57,12 +57,11 @@ class GptTranslate::ChatGPT
   def api_base_url
     url = ENV.fetch('OPENAI_API_BASE', 'https://api.openai.com/')
     Jekyll.logger.info("Current OpenAI API Base URL: #{url.inspect}")
-
-    warning_msg = 'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
-                  'The provider of this endpoint may have access to all details ' \
-                  'of your requests. Only use a custom endpoint if you trust the provider.'
+    warning_msg =
+      'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
+      'The provider of this endpoint may have access to all details ' \
+      'of your requests. Only use a custom endpoint if you trust the provider.'
     Jekyll.logger.warn(warning_msg) if url != 'https://api.openai.com/'
-
     url
   end
 
@@ -154,15 +153,19 @@ class GptTranslate::ChatGPT
     rescue StandardError => e
       attempt += 1
       if attempt < 4
-        Jekyll.logger.error("ChatGPT failed to answer to #{prompt.inspect} \
-(attempt no.#{attempt}): #{e.message.inspect}")
+        Jekyll.logger.error(
+          "ChatGPT failed to answer to #{prompt.inspect}" \
+          "(attempt no.#{attempt}): #{e.message.inspect}"
+        )
         retry
       end
       raise e
     end
-    Jekyll.logger.info("Translated #{par.split.count} #{@source.upcase} words \
-to #{answer.split.count} #{@target.upcase} words \
-through #{@model} in #{(Time.now - start).round(2)}s: #{"#{par[0..24]}...".inspect}")
+    Jekyll.logger.info(
+      "Translated #{par.split.count} #{@source.upcase} words " \
+      "to #{answer.split.count} #{@target.upcase} words " \
+      "through #{@model} in #{(Time.now - start).round(2)}s: #{"#{par[0..24]}...".inspect}"
+    )
     answer
   end
 end

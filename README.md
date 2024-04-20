@@ -13,7 +13,7 @@ Install it first (you need [Ruby 3+](https://www.ruby-lang.org/en/news/2020/12/2
 and [Jekyll 3+](https://jekyllrb.com/)):
 
 ```
-gem install jekyll-chatgpt-translate
+$ gem install jekyll-chatgpt-translate
 ```
 
 Then, add this to `_config.yml`:
