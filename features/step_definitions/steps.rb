@@ -53,6 +53,10 @@ Then('File {string} exists') do |string|
   raise "The file \"#{string}\" is absent:\n#{`tree -s`}" unless File.exist?(string)
 end
 
+Then('File {string} doesn\'t exist') do |string|
+  raise "The file \"#{string}\" is present:\n#{`tree -s`}" if File.exist?(string)
+end
+
 Then('File {string} contains {string}') do |string, string2|
   raise "The file \"#{string}\" is absent" unless File.exist?(string)
   content = File.read(string)

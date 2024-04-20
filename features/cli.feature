@@ -207,3 +207,38 @@ Feature: Simple site building
     And Stdout contains "The page is absent, need to translate"
     And File "_site/2023/01/01/hello.html" exists
     And File "_site/2023/01/01/hello.html" contains "NO TRANSLATION!"
+
+  Scenario: Translation skipped due to the ONLY tag
+    Given I have a "_config.yml" file with content:
+    """
+    url: https://www.yegor256.com
+    markdown: kramdown
+    plugins:
+      - jekyll-chatgpt-translate
+    chatgpt-translate:
+      source: en
+      threshold: 0
+      api_key: "it-is-not-used, because EN to EN translation"
+      layout: default
+      targets:
+        -
+          only: ABC
+          language: en
+          permalink: :slug-en.html
+    """
+    And I have a "_layouts/default.html" file with content:
+    """
+    {{ content }}
+    """
+    And I have a "_posts/2023-01-01-hello.md" file with content:
+    """
+    ---
+    layout: default
+    title: foo
+    ---
+    Hello, world!
+    """
+    Then I build Jekyll site
+    And Exit code is zero
+    And File "_site/2023/01/01/hello.html" exists
+    And File "_site/2023/01/01/hello-en.html" doesn't exist
