@@ -38,6 +38,7 @@ chatgpt-translate:
       permalink: :year-:month-:day-:slug-chinese.html
       layout: chinese-translated
     - 
+      only: ru-post
       language: fr
       permalink: :year-:month-:day-:title-french.html
 ```
@@ -111,6 +112,10 @@ If this option is not specified,
 
 * `targets` (mandatory) — an array of target languages, each of
   which has the following attributes
+
+  * `only` (optional) —
+    it this is present, only the posts with the provided "layout"
+    will be translated to this target
 
   * `language` (mandatory) —
     [ISO-639-1][iso-639] code of the target language

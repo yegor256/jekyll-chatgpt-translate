@@ -63,11 +63,17 @@ class GptTranslate::Generator < Jekyll::Generator
     marker = "Translated by ChatGPT #{model}#{version.empty? ? '' : "/#{version}"}"
     site.posts.docs.shuffle.each_with_index do |doc, pos|
       plain = GptTranslate::Plain.new(doc.content).to_s
+      layout = doc['layout']
       config['targets'].each do |target|
         pstart = Time.now
         link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
         lang = target['language']
         raise 'Language must be defined for each target' if target.nil?
+        only = target['only']
+        if !only.nil? && layout != only
+          Jekyll.logger.debug("Not translating #{link.inspect}, b/c 'only' set to '#{only}'")
+          next
+        end
         path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
         FileUtils.mkdir_p(File.dirname(path))
         File.write(
