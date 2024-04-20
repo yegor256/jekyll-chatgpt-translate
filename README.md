@@ -78,7 +78,7 @@ and placed into the `_site` directory.
 Full list of options available to specify in `_config.yml`:
 
 * `api_key_file` (optional) — the file with OpenAI API key.
-If this option is not specified,
+  If this option is not specified,
   it is expected to have the key in the `OPENAI_API_KEY` environment variable.
 
 * `api_key` (optional) — the OpenAI API key itself. This is a very bad idea to
@@ -119,6 +119,10 @@ If this option is not specified,
 
   * `language` (mandatory) —
     [ISO-639-1][iso-639] code of the target language
+
+  * `source` (optional) —
+    [ISO-639-1][iso-639] code of the source language (overwrites the
+    value of the `source` defined above)
 
   * `permalink` (mandatory) — template to use for newly generated pages
 

@@ -117,7 +117,7 @@ class GptTranslate::Generator < Jekyll::Generator
           gpt = GptTranslate::ChatGPT.new(
             key,
             model,
-            config['source'] || 'en',
+            target['source'] || config['source'] || 'en',
             lang
           )
           foreign = gpt.translate(
