@@ -23,5 +23,5 @@
 # SOFTWARE.
 
 module GptTranslate
-  VERSION = '0.0.0'
+  VERSION = '0.0.45'
 end
