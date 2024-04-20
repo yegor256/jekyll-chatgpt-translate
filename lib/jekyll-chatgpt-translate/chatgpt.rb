@@ -57,11 +57,13 @@ class GptTranslate::ChatGPT
   def api_base_url
     url = ENV.fetch('OPENAI_API_BASE', 'https://api.openai.com/')
     Jekyll.logger.info("Current OpenAI API Base URL: #{url.inspect}")
-    warning_msg =
-      'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
-      'The provider of this endpoint may have access to all details ' \
-      'of your requests. Only use a custom endpoint if you trust the provider.'
-    Jekyll.logger.warn(warning_msg) if url != 'https://api.openai.com/'
+    unless url == 'https://api.openai.com/'
+      Jekyll.logger.warn(
+        'Warning: You\'re using a custom endpoint for the OpenAI API. ' \
+        'The provider of this endpoint may have access to all details ' \
+        'of your requests. Only use a custom endpoint if you trust the provider.'
+      )
+    end
     url
   end
 
