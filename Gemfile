@@ -27,7 +27,7 @@ gemspec
 
 gem 'cucumber', '9.2.0', require: false
 gem 'kramdown-parser-gfm', '1.1.0', require: false
-gem 'minitest', '5.23.0', require: false
+gem 'minitest', '5.23.1', require: false
 gem 'rake', '13.2.1', require: false
 gem 'rubocop', '1.63.5', require: false
 gem 'rubocop-rspec', '2.29.2', require: false
