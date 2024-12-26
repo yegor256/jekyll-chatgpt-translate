@@ -12,7 +12,7 @@ translate its pages to another language, through
 works for [my blog](https://github.com/yegor256/ru.yegor256.com),
 for example [this page](https://ru.yegor256.com/2023-08-13-dictators.html)
 is translated to
-[English](https://ru.yegor256.com/english/2023-08-13-dictators.html).
+[English](https://www.yegor256.com/en/2023/08/13/dictators.html).
 
 Install it first (you need
 [Ruby 3+](https://www.ruby-lang.org/en/news/2020/12/25/ruby-3-0-0-released/)
