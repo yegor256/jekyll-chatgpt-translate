@@ -32,12 +32,12 @@ chatgpt-translate:
   model: gpt-3.5-turbo
   source: en
   layout: translated
-  targets: 
-    - 
+  targets:
+    -
       language: zh
       permalink: :year-:month-:day-:slug-chinese.html
       layout: chinese-translated
-    - 
+    -
       only: ru-post
       language: fr
       permalink: :year-:month-:day-:title-french.html
