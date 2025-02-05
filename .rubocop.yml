@@ -29,7 +29,6 @@ AllCops:
   TargetRubyVersion: 2.7
   SuggestExtensions: false
   NewCops: enable
-
 Gemspec/RequiredRubyVersion:
   Enabled: false
 Metrics/MethodLength:
@@ -60,3 +59,7 @@ Metrics/ClassLength:
   Max: 200
 Style/ClassVars:
   Enabled: false
+required:
+  - rubocop-rake
+  - rubocop-minitest
+  - rubocop-performance
