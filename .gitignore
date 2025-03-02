@@ -1,7 +1,12 @@
-Gemfile.lock
 *.gem
-.bundle/
 .DS_Store
-coverage/
+.bundle/
+.idea/
+.yardoc/
+Gemfile.lock
 _chatgpt-translate/
+coverage/
+doc/
+node_modules/
+rdoc/
 vendor/
