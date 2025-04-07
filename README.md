@@ -3,7 +3,7 @@
 ![logo](logo.png)
 
 [![rake](https://github.com/yegor256/jekyll-chatgpt-translate/actions/workflows/rake.yml/badge.svg)](https://github.com/yegor256/jekyll-chatgpt-translate/actions/workflows/rake.yml)
-[![Gem Version](https://badge.fury.io/rb/jekyll-chatgpt-translate.svg)](http://badge.fury.io/rb/jekyll-chatgpt-translate)
+[![Gem Version](https://badge.fury.io/rb/jekyll-chatgpt-translate.svg)](https://badge.fury.io/rb/jekyll-chatgpt-translate)
 
 If you have a [Jekyll](https://jekyllrb.com/) static site,
 this plugin may help you automatically
