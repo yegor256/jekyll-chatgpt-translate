@@ -3,7 +3,6 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023-2025 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-require 'minitest/autorun'
 require 'webmock/minitest'
 require 'jekyll'
 require 'tempfile'
