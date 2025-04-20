@@ -70,9 +70,9 @@ class GptTranslate::ChatGPT
         ready[i] = "> #{translate_par(par[2..])}"
       elsif par.start_with?('* ')
         ready[i] = "* #{translate_par(par[2..])}"
-      elsif par =~ /^[0-9]+\. /
+      elsif /^[0-9]+\. /.match?(par)
         ready[i] = "1. #{translate_par(par.split('.', 2)[1])}"
-      elsif par =~ /^[^\p{Alnum}\*'"\[]/
+      elsif /^[^\p{Alnum}\*'"\[]/.match?(par)
         Jekyll.logger.debug("Not translating this, b/c it's not a plain text: #{par.inspect}")
         ready[i] = par
       else

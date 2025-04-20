@@ -35,8 +35,8 @@ class GptTranslate::PromptTest < Minitest::Test
   end
 
   def test_multiple_paragraphs
-    assert(
-      GptTranslate::Prompt.new("Hello,\n\nJeff!", 'en', 'zh').to_s.include?("\"Hello,\n\nJeff!\"")
+    assert_includes(
+      GptTranslate::Prompt.new("Hello,\n\nJeff!", 'en', 'zh').to_s, "\"Hello,\n\nJeff!\""
     )
   end
 end

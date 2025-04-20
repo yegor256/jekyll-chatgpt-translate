@@ -15,7 +15,7 @@ def version
 end
 
 require 'rake/clean'
-task default: %i[clean test features rubocop copyright]
+task default: %i[clean test features rubocop]
 
 require 'rake/testtask'
 desc 'Run all unit tests'
@@ -41,7 +41,6 @@ require 'rubocop/rake_task'
 desc 'Run RuboCop on all directories'
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.fail_on_error = true
-  task.requires << 'rubocop-rspec'
 end
 
 require 'cucumber/rake/task'
@@ -50,12 +49,4 @@ Cucumber::Rake::Task.new(:features) do
 end
 Cucumber::Rake::Task.new(:'features:html') do |t|
   t.profile = 'html_report'
-end
-
-task :copyright do
-  sh "grep -q -r '#{Date.today.strftime('%Y')}' \
-    --include '*.rb' \
-    --include '*.txt' \
-    --include 'Rakefile' \
-    ."
 end
