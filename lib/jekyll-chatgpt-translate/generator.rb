@@ -25,6 +25,10 @@ class GptTranslate::Generator < Jekyll::Generator
 
   # Main plugin action, called by Jekyll-core
   def generate(site)
+    if ARGV.include?('--offline')
+      Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} skipped, due to the --offline option")
+      return
+    end
     Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} starting...")
     config ||= site.config['chatgpt-translate'] || {}
     home = config['tmpdir'] || '_chatgpt-translate'
