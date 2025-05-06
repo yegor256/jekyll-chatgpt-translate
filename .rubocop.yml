@@ -48,3 +48,4 @@ Metrics/ClassLength:
   Max: 200
 Style/ClassVars:
   Enabled: false
+require: []

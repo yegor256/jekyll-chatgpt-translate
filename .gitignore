@@ -1,12 +1,12 @@
-*.gem
-.DS_Store
+_chatgpt-translate/
 .bundle/
+.DS_Store
 .idea/
 .yardoc/
-Gemfile.lock
-_chatgpt-translate/
+*.gem
 coverage/
 doc/
+Gemfile.lock
 node_modules/
 rdoc/
 vendor/
