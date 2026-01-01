@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# SPDX-FileCopyrightText: Copyright (c) 2023-2025 Yegor Bugayenko
+# SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
 require 'jekyll'
@@ -16,7 +16,7 @@ module GptTranslate; end
 
 # Abstraction of ChatGPT.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
-# Copyright:: Copyright (c) 2023-2025 Yegor Bugayenko
+# Copyright:: Copyright (c) 2023-2026 Yegor Bugayenko
 # License:: MIT
 class GptTranslate::ChatGPT
   # Is TRUE if we already shown to the user the available models.
