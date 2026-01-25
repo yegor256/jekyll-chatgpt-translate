@@ -6,17 +6,18 @@
 [![Gem Version](https://badge.fury.io/rb/jekyll-chatgpt-translate.svg)](https://badge.fury.io/rb/jekyll-chatgpt-translate)
 
 If you have a [Jekyll](https://jekyllrb.com/) static site,
-this plugin may help you automatically
-translate its pages to another language, through
-[ChatGPT](https://chat.openai.com/). See how it
-works for [my blog](https://github.com/yegor256/ru.yegor256.com),
-for example [this page](https://ru.yegor256.com/2023-08-13-dictators.html)
-is translated to
-[English](https://www.yegor256.com/en/2023/08/13/dictators.html).
+  this plugin may help you automatically
+  translate its pages to another language, through
+  [ChatGPT](https://chat.openai.com/).
+See how it works for [my blog](https://github.com/yegor256/ru.yegor256.com),
+  for example [this page](https://ru.yegor256.com/2023-08-13-dictators.html)
+  is translated to
+  [English](https://www.yegor256.com/en/2023/08/13/dictators.html).
 
-Install it first (you need
-[Ruby 3+](https://www.ruby-lang.org/en/news/2020/12/25/ruby-3-0-0-released/)
-and [Jekyll 3+](https://jekyllrb.com/)):
+Install it first
+  (you need
+  [Ruby 3+](https://www.ruby-lang.org/en/news/2020/12/25/ruby-3-0-0-released/)
+  and [Jekyll 3+](https://jekyllrb.com/)):
 
 ```bash
 gem install jekyll-chatgpt-translate
@@ -49,29 +50,28 @@ where the layout for Chinese is `_layout/chinese-translated.html` and for
 French is `_layout/translated.html` (you must have these files).
 
 OpenAI API KEY must be set in the `OPENAI_API_KEY` environment variable,
-otherwise
-the plugin will not do any translation and won't generate translated pages.
-You can get your key
-[here][open-ai].
+  otherwise the plugin will not do any translation
+  and won't generate translated pages.
+You can get your key go to [OpenAI][open-ai].
 
 OpenAI API base URL can be customized by the `OPENAI_API_BASE`
-environment variable.
+  environment variable.
 If this variable is not set, the default value is `https://api.openai.com/`.
 
 Inside the original page you can use `{{ page.chatgpt-translate.urls[XX] }}`
-in order to render the URL
-of the translated page, where `XX` is the [ISO-639-1][iso-639]
-code of the target language.
+  in order to render the URL
+  of the translated page, where `XX` is the [ISO-639-1][iso-639]
+  code of the target language.
 Inside the translated page you can use
-`{{ page.chatgpt-translate.original-url }}` in order
-to get the URL of the page that was translated.
+  `{{ page.chatgpt-translate.original-url }}` in order
+  to get the URL of the page that was translated.
 
 You can also use `{{ page.chatgpt-translate.model }}`
-inside both the original page and the translated one,
-to refer to the model of ChatGPT.
+  inside both the original page and the translated one,
+  to refer to the model of ChatGPT.
 The presence of `{{ page.chatgpt-translate }}` means that the
-page was translated or the translated HTML was downloaded
-and placed into the `_site` directory.
+  page was translated or the translated HTML was downloaded
+  and placed into the `_site` directory.
 
 ## Options
 
