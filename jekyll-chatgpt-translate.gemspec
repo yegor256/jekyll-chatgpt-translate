@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'humanize', '~>3.1'
   s.add_dependency 'iri', '~>0.11'
   s.add_dependency 'iso-639', '~>0.3'
-  s.add_dependency 'jekyll', '~>3.10'
+  s.add_dependency 'jekyll', '>= 3.0', '< 5.0'
   s.add_dependency 'json', '~>2.18'
   s.add_dependency 'redcarpet', '~>3.6'
   s.add_dependency 'ruby-openai', '~>8.3'
