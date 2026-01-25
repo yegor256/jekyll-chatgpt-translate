@@ -45,7 +45,7 @@ class GptTranslate::Generator < Jekyll::Generator
     translated = 0
     copied = 0
     model = config['model'] || 'gpt-3.5-turbo'
-    marker = "Translated by ChatGPT #{model}#{version.empty? ? '' : "/#{version}"}"
+    marker = "Translated by ChatGPT #{model}#{"/#{version}" unless version.empty?}"
     site.posts.docs.shuffle.each_with_index do |doc, pos|
       plain = GptTranslate::Plain.new(doc.content).to_s
       layout = doc['layout']
@@ -148,12 +148,14 @@ in #{(Time.now - pstart).round(2)}s: #{path} (#{File.size(path)} bytes)")
       @link = link
     end
 
+    # rubocop:disable Naming/PredicateMethod
     def write(_dest)
       FileUtils.mkdir_p(File.dirname(path))
       File.write(path, @html)
       Jekyll.logger.info("Saved #{@html.split.count} words to #{path.inspect}")
       true
     end
+    # rubocop:enable Naming/PredicateMethod
   end
 
   private

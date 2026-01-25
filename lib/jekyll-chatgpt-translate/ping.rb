@@ -10,7 +10,7 @@ require_relative 'version'
 
 # see https://stackoverflow.com/a/6048451/187141
 require 'openssl'
-OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE unless defined?(OpenSSL::SSL::VERIFY_PEER)
 
 # The module we are in.
 module GptTranslate; end
