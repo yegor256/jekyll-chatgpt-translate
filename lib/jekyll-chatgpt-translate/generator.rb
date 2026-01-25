@@ -3,8 +3,9 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-require 'jekyll'
+require 'elapsed'
 require 'fileutils'
+require 'jekyll'
 require 'json'
 require_relative 'chatgpt'
 require_relative 'permalink'
@@ -29,7 +30,7 @@ class GptTranslate::Generator < Jekyll::Generator
       Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} skipped, due to the --offline option")
       return
     end
-    Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} starting...")
+    Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION} starts (no --offline option)...")
     config ||= site.config['chatgpt-translate'] || {}
     home = config['tmpdir'] || '_chatgpt-translate'
     key = api_key(config)
@@ -41,101 +42,100 @@ class GptTranslate::Generator < Jekyll::Generator
     version = config['version'] || GptTranslate::VERSION
     threshold = config['threshold'] || 1024
     min_chars = config['min_chars'] || 128
-    start = Time.now
     translated = 0
     copied = 0
     model = config['model'] || 'gpt-3.5-turbo'
     marker = "Translated by ChatGPT #{model}#{"/#{version}" unless version.empty?}"
-    site.posts.docs.shuffle.each_with_index do |doc, pos|
-      plain = GptTranslate::Plain.new(doc.content).to_s
-      layout = doc['layout']
-      config['targets'].each do |target|
-        pstart = Time.now
-        link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
-        lang = target['language']
-        raise 'Language must be defined for each target' if target.nil?
-        only = target['only']
-        if !only.nil? && layout != only
-          Jekyll.logger.debug("Not translating #{link.inspect}, b/c 'only' set to '#{only}'")
-          next
-        end
-        path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
-        FileUtils.mkdir_p(File.dirname(path))
-        File.write(
-          path,
-          [
-            '---',
-            "layout: #{target['layout'] || layout}",
-            "title: #{doc['title'].to_json}",
-            "description: #{doc['description'].to_json}",
-            "permalink: #{link.to_json}",
-            'chatgpt-translate:',
-            "  original-url: #{doc.url.to_json}",
-            "  language: #{lang.to_json}",
-            "  model: #{model.to_json}",
-            '---'
-          ].join("\n")
-        )
-        html = config['no_download'].nil? ? GptTranslate::Ping.new(site, link).download : nil
-        needed = false
-        added = false
-        if html.nil?
-          Jekyll.logger.info("The page is absent, need to translate #{link.inspect}")
-          needed = true
-        else
-          copied += 1
-          site.static_files << DownloadedFile.new(site, link, html)
-          added = true
-          if version.empty?
-            Jekyll.logger.info("Re-translation not required, since version is empty: #{link.inspect}")
-          elsif html.include?(marker)
-            Jekyll.logger.info("No need to translate, the page exists at \
-#{link.inspect} (#{html.split.count} words)")
-          else
-            Jekyll.logger.info("Re-translation required for #{link.inspect}")
-            needed = true
+    elapsed(Jekyll.logger) do
+      site.posts.docs.shuffle.each_with_index do |doc, pos|
+        plain = GptTranslate::Plain.new(doc.content).to_s
+        layout = doc['layout']
+        config['targets'].each do |target|
+          link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
+          lang = target['language']
+          raise 'Language must be defined for each target' if target.nil?
+          only = target['only']
+          if !only.nil? && layout != only
+            Jekyll.logger.debug("Not translating #{link.inspect}, b/c 'only' set to '#{only}'")
+            next
           end
-        end
-        if translated >= threshold
-          Jekyll.logger.info("Page ##{pos} is ignored, we are over the threshold of #{threshold}: #{link}")
-        elsif needed
-          gpt = GptTranslate::ChatGPT.new(
-            key,
-            model,
-            target['source'] || config['source'] || 'en',
-            lang
-          )
-          foreign = gpt.translate(
-            plain,
-            min: min_chars,
-            window_length: (config['window_length'] || '2048').to_i
-          )
+          path = File.join(home, lang, doc.basename.gsub(/\.md$/, "-#{lang}.md"))
+          FileUtils.mkdir_p(File.dirname(path))
           File.write(
             path,
             [
-              '',
-              foreign,
-              '',
-              "#{marker} on #{Time.now.strftime('%Y-%m-%d at %H:%M')}\n{: .jekyll-chatgpt-translate}"
-            ].join("\n"),
-            mode: 'a+'
+              '---',
+              "layout: #{target['layout'] || layout}",
+              "title: #{doc['title'].to_json}",
+              "description: #{doc['description'].to_json}",
+              "permalink: #{link.to_json}",
+              'chatgpt-translate:',
+              "  original-url: #{doc.url.to_json}",
+              "  language: #{lang.to_json}",
+              "  model: #{model.to_json}",
+              '---'
+            ].join("\n")
           )
-          site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
-          site.static_files.delete_if { |f| f.is_a?(DownloadedFile) && f.link == link }
-          added = true
-          translated += 1
-          Jekyll.logger.info("Translated via ChatGPT \
-in #{(Time.now - pstart).round(2)}s: #{path} (#{File.size(path)} bytes)")
+          html = config['no_download'].nil? ? GptTranslate::Ping.new(site, link).download : nil
+          needed = false
+          added = false
+          if html.nil?
+            Jekyll.logger.info("The page is absent, need to translate #{link.inspect}")
+            needed = true
+          else
+            copied += 1
+            site.static_files << DownloadedFile.new(site, link, html)
+            added = true
+            if version.empty?
+              Jekyll.logger.info("Re-translation not required, since version is empty: #{link.inspect}")
+            elsif html.include?(marker)
+              Jekyll.logger.info("The page exists at #{link.inspect} (#{html.split.count} words)")
+            else
+              Jekyll.logger.info("Re-translation required for #{link.inspect}")
+              needed = true
+            end
+          end
+          if translated >= threshold
+            Jekyll.logger.info("Page ##{pos} is ignored, we are over the threshold of #{threshold}: #{link}")
+          elsif needed
+            elapsed(Jekyll.logger) do
+              gpt = GptTranslate::ChatGPT.new(
+                key,
+                model,
+                target['source'] || config['source'] || 'en',
+                lang
+              )
+              foreign = gpt.translate(
+                plain,
+                min: min_chars,
+                window_length: (config['window_length'] || '2048').to_i
+              )
+              File.write(
+                path,
+                [
+                  '',
+                  foreign,
+                  '',
+                  "#{marker} on #{Time.now.strftime('%Y-%m-%d at %H:%M')}\n{: .jekyll-chatgpt-translate}"
+                ].join("\n"),
+                mode: 'a+'
+              )
+              site.pages << Jekyll::Page.new(site, site.source, File.dirname(path), File.basename(path))
+              site.static_files.delete_if { |f| f.is_a?(DownloadedFile) && f.link == link }
+              added = true
+              translated += 1
+              throw :"Translated via ChatGPT #{path} (#{File.size(path)} bytes)"
+            end
+          end
+          next unless added
+          doc.data['chatgpt-translate'] ||= {}
+          doc.data['chatgpt-translate']['model'] ||= model
+          doc.data['chatgpt-translate']['urls'] ||= {}
+          doc.data['chatgpt-translate']['urls'][lang] = link
         end
-        next unless added
-        doc.data['chatgpt-translate'] ||= {}
-        doc.data['chatgpt-translate']['model'] ||= model
-        doc.data['chatgpt-translate']['urls'] ||= {}
-        doc.data['chatgpt-translate']['urls'][lang] = link
       end
+      throw :"#{translated} page(s) translated and #{copied} page(s) copied"
     end
-    Jekyll.logger.info("jekyll-chatgpt-translate #{GptTranslate::VERSION}: \
-#{translated} pages translated and #{copied} pages copied in #{(Time.now - start).round(2)}s")
   end
 
   # The file we just downloaded.

@@ -3,10 +3,11 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
+require 'elapsed'
+require 'iso-639'
 require 'jekyll'
 require 'json'
 require 'openai'
-require 'iso-639'
 require 'tiktoken_ruby'
 require_relative 'pars'
 require_relative 'prompt'
@@ -115,40 +116,39 @@ class GptTranslate::ChatGPT
       @@models_printed = true
     end
     prompt = GptTranslate::Prompt.new(par, @source, @target).to_s
-    start = Time.now
     answer = nil
     attempt = 0
-    begin
-      response = @client.chat(
-        parameters: {
-          model: @model,
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.7
-        }
-      )
-      json = response.is_a?(Hash) ? response : JSON.parse(response)
-      answer = json.dig('choices', 0, 'message', 'content')
-      if answer.nil?
-        Jekyll.logger.error("No content returned by ChatGPT: #{response}")
-        raise 'No content returned by ChatGPT'
-      end
-      Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
-    rescue StandardError => e
-      attempt += 1
-      if attempt < 4
-        Jekyll.logger.error(
-          "ChatGPT failed to answer to #{prompt.inspect}" \
-          "(attempt no.#{attempt}): #{e.message.inspect}"
+    elapsed(Jekyll.logger) do
+      begin
+        response = @client.chat(
+          parameters: {
+            model: @model,
+            messages: [{ role: 'user', content: prompt }],
+            temperature: 0.7
+          }
         )
-        retry
+        json = response.is_a?(Hash) ? response : JSON.parse(response)
+        answer = json.dig('choices', 0, 'message', 'content')
+        if answer.nil?
+          Jekyll.logger.error("No content returned by ChatGPT: #{response}")
+          raise 'No content returned by ChatGPT'
+        end
+        Jekyll.logger.debug("ChatGPT prompt: #{prompt.inspect}, ChatGPT answer: #{answer.inspect}")
+      rescue StandardError => e
+        attempt += 1
+        if attempt < 4
+          Jekyll.logger.error(
+            "ChatGPT failed to answer to #{prompt.inspect}" \
+            "(attempt no.#{attempt}): #{e.message.inspect}"
+          )
+          retry
+        end
+        raise e
       end
-      raise e
+      throw :"Translated #{par.split.count} #{@source.upcase} words \
+        to #{answer.split.count} #{@target.upcase} words \
+        through #{@model}: #{"#{par[0..24]}...".inspect}"
     end
-    Jekyll.logger.info(
-      "Translated #{par.split.count} #{@source.upcase} words " \
-      "to #{answer.split.count} #{@target.upcase} words " \
-      "through #{@model} in #{(Time.now - start).round(2)}s: #{"#{par[0..24]}...".inspect}"
-    )
     answer
   end
 end

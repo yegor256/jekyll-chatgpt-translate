@@ -24,6 +24,7 @@ Gem::Specification.new do |s|
   s.rdoc_options = ['--charset=UTF-8']
   s.extra_rdoc_files = %w[README.md LICENSE.txt]
   s.add_dependency 'base64', '~>0.3'
+  s.add_dependency 'elapsed', '~>0.2'
   s.add_dependency 'humanize', '~>3.1'
   s.add_dependency 'iri', '~>0.11'
   s.add_dependency 'iso-639', '~>0.3'
