@@ -13,9 +13,6 @@ require_relative 'ping'
 require_relative 'plain'
 require_relative 'version'
 
-# The module we are in.
-module GptTranslate; end
-
 # Pages generator.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2023-2026 Yegor Bugayenko
@@ -148,14 +145,13 @@ class GptTranslate::Generator < Jekyll::Generator
       @link = link
     end
 
-    # rubocop:disable Naming/PredicateMethod
+    # rubocop:disable-next Naming/PredicateMethod
     def write(_dest)
       FileUtils.mkdir_p(File.dirname(path))
       File.write(path, @html)
       Jekyll.logger.info("Saved #{@html.split.count} words to #{path.inspect}")
       true
     end
-    # rubocop:enable Naming/PredicateMethod
   end
 
   private
