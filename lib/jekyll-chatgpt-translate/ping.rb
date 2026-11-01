@@ -12,9 +12,6 @@ require_relative 'version'
 require 'openssl'
 OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 
-# The module we are in.
-module GptTranslate; end
-
 # Ping one page of a site.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
 # Copyright:: Copyright (c) 2023-2026 Yegor Bugayenko

@@ -4,9 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 require 'cgi'
-
-# The module we are in.
-module GptTranslate; end
+require_relative 'version'
 
 # Permalink.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
