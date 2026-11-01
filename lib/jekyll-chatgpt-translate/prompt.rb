@@ -5,9 +5,7 @@
 
 require 'iso-639'
 require 'humanize'
-
-# The module we are in.
-module GptTranslate; end
+require_relative 'version'
 
 # Prompt for ChatGPT.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)

@@ -4,9 +4,7 @@
 # SPDX-License-Identifier: MIT
 
 require 'redcarpet'
-
-# The module we are in.
-module GptTranslate; end
+require_relative 'version'
 
 # Markdown to plain text.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)

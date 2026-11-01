@@ -11,9 +11,7 @@ require 'openai'
 require 'tiktoken_ruby'
 require_relative 'pars'
 require_relative 'prompt'
-
-# The module we are in.
-module GptTranslate; end
+require_relative 'version'
 
 # Abstraction of ChatGPT.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
