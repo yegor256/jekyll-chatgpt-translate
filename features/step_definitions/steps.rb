@@ -69,9 +69,9 @@ When('I copy this gem into temp dir') do
 end
 
 Given('It is Unix') do
-  pending if Gem.win_platform?
+  skip_this_scenario if Gem.win_platform?
 end
 
 Given('It is Windows') do
-  pending unless Gem.win_platform?
+  skip_this_scenario unless Gem.win_platform?
 end
