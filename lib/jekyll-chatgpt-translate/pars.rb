@@ -3,8 +3,7 @@
 # SPDX-FileCopyrightText: Copyright (c) 2023-2026 Yegor Bugayenko
 # SPDX-License-Identifier: MIT
 
-# The module we are in.
-module GptTranslate; end
+require_relative 'version'
 
 # Markdown broken down ito pars.
 # Author:: Yegor Bugayenko (yegor256@gmail.com)
@@ -23,7 +22,7 @@ class GptTranslate::Pars
     inside = false
     @markdown.strip.split(/\n{2,}/).compact.each do |par|
       if inside
-        pars[pars.size - 1] = "#{pars[pars.size - 1]}\n\n#{par}"
+        pars[-1] = "#{pars[-1]}\n\n#{par}"
       else
         pars << par
       end
