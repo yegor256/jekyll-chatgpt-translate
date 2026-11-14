@@ -94,6 +94,30 @@ class GptTranslate::ChatGPTTest < Minitest::Test
     )
   end
 
+  def test_keeps_paragraph_after_translated_batch
+    client = Object.new
+    client.define_singleton_method(:chat) do |*|
+      { 'choices' => [{ 'message' => { 'content' => 'done!' } }] }
+    end
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru', client: client)
+    assert_equal(
+      "done!\n\nOK",
+      chat.translate("This paragraph needs translation.\n\nOK", min: 10)
+    )
+  end
+
+  def test_keeps_first_paragraph_of_next_window
+    sent = []
+    client = Object.new
+    client.define_singleton_method(:chat) do |parameters:|
+      sent << parameters[:messages].to_s
+      { 'choices' => [{ 'message' => { 'content' => 'done!' } }] }
+    end
+    chat = GptTranslate::ChatGPT.new('fake-key', 'gpt-3.5-turbo', 'en', 'ru', client: client)
+    chat.translate("Alpha paragraph here\n\nBravo paragraph here\n\nCharlie paragraph here", min: 1, window_length: 2)
+    assert_equal(3, sent.length)
+  end
+
   def test_with_json
     client = Object.new
     def client.chat(*)
