@@ -46,13 +46,13 @@ class GptTranslate::Generator < Jekyll::Generator
     elapsed(Jekyll.logger) do
       site.posts.docs.shuffle.each_with_index do |doc, pos|
         plain = GptTranslate::Plain.new(doc.content).to_s
-        layout = doc['layout']
+        page = doc['layout']
         config['targets'].each do |target|
           link = GptTranslate::Permalink.new(doc, target['permalink']).to_path
           lang = target['language']
           raise 'Language must be defined for each target' if target.nil?
           only = target['only']
-          if !only.nil? && layout != only
+          if !only.nil? && page != only
             Jekyll.logger.debug("Not translating #{link.inspect}, b/c 'only' set to '#{only}'")
             next
           end

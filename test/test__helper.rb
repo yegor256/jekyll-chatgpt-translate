@@ -97,6 +97,7 @@ class GptTranslate::FakeDocument
   def initialize(path)
     @path = path
     @data = { 'date' => Time.now, 'title' => 'Hello!' }
+    parse_front_matter(path) if File.exist?(path)
   end
 
   def content
@@ -121,6 +122,18 @@ class GptTranslate::FakeDocument
 
   def basename
     '2023-01-01-hello.md'
+  end
+
+  private
+
+  # Take the front matter from the file, if it exists.
+  def parse_front_matter(path)
+    match = File.read(path).match(/\A---\r?\n(.*?)\r?\n---/m)
+    return if match.nil?
+    match[1].split("\n").each do |line|
+      pair = line.split(':', 2)
+      @data[pair[0].strip] = pair[1].strip if pair.size == 2
+    end
   end
 end
 
